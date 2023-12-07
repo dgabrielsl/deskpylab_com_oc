@@ -1,0 +1,15 @@
+USER_LOGGED         0	n/a
+USER_PASSWORD       1	n/a
+
+MAKE_ASSIGNMENTS	2	menu_navg_assign
+DOWNLOAD_REPORTS	3	menu_tools_reports
+LOAD_BOOK		    4	menu_tools_dataload
+ADMIN_USERS		    5	menu_settings_users
+LOAD_ENTRY		    6	*not_builded*
+UPDATE_LOG		    7	*not_builded*
+DELETE_LOG		    8	*not_builded*
+
+
+menu_navg_mydashboard
+menu_navg_processing
+menu_settings_account
