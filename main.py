@@ -29,6 +29,10 @@ class Main(QMainWindow, QWidget):
 
         menu_file = menu_bar.addMenu('&Archivo')
 
+        # Status bar.
+        self.statusbar = self.statusBar()
+        self.statusbar.showMessage('Credenciales requeridas', 3000)
+
         # End user session.
         self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogOkButton)), '&Cerrar sesión', self)
         self.menu_file_signout.setShortcut('Ctrl+Q')
@@ -45,6 +49,14 @@ class Main(QMainWindow, QWidget):
         menu_file.addAction(self.menu_file_off)
 
         menu_navg = menu_bar.addMenu('&Navegación')
+
+        # Set up assignments.
+        self.menu_navg_home = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirHomeIcon)), '&Inicio', self)
+        self.menu_navg_home.setShortcut('')
+        self.menu_navg_home.setStatusTip('Ver la página de inicio.')
+        self.menu_navg_home.triggered.connect(self.menu_events)
+        self.menu_navg_home.setDisabled(True)
+        menu_navg.addAction(self.menu_navg_home)
 
         # Set up assignments.
         self.menu_navg_assign = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirHomeIcon)), '&Asignar solicitudes', self)
@@ -131,6 +143,7 @@ class Main(QMainWindow, QWidget):
         self.w4 = QWidget()             # Download data.
         self.w5 = QWidget()             # User admin.
         self.w6 = QWidget()             # My profile.
+        self.w7 = QWidget()             # Set up assignments.
 
         l0 = QVBoxLayout()
 
@@ -148,6 +161,7 @@ class Main(QMainWindow, QWidget):
         href.setStyleSheet('margin-bottom: 10px; color: #db0; font-size: 14px;')
         href.setCursor(Qt.CursorShape.PointingHandCursor)
         href.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        href.setStatusTip('Ir al sitio web https://dgabrielsolo.github.io/deskpylab')
         l0.addWidget(href)
 
         self.le_login_user = QLineEdit()
@@ -291,6 +305,11 @@ class Main(QMainWindow, QWidget):
         l6.addStretch()
         self.w6.setLayout(l6)
 
+        l7 = QVBoxLayout()
+        l7.addWidget(QLabel('Asignar las solicitudes nuevas'))
+        l7.addStretch()
+        self.w7.setLayout(l7)
+
         self.stacked_layout.addWidget(self.w0)
         self.stacked_layout.addWidget(self.w1)
         self.stacked_layout.addWidget(self.w2)
@@ -298,6 +317,7 @@ class Main(QMainWindow, QWidget):
         self.stacked_layout.addWidget(self.w4)
         self.stacked_layout.addWidget(self.w5)
         self.stacked_layout.addWidget(self.w6)
+        self.stacked_layout.addWidget(self.w7)
 
         self.stacked_layout.setCurrentIndex(0)
 
@@ -367,6 +387,7 @@ class Main(QMainWindow, QWidget):
 
                 if self.success_log:
                     self.menu_file_signout.setDisabled(False)
+                    self.menu_navg_home.setDisabled(False)
                     self.menu_navg_mydashboard.setDisabled(False)
                     self.menu_navg_processing.setDisabled(False)
                     self.menu_settings_account.setDisabled(False)
@@ -396,6 +417,7 @@ class Main(QMainWindow, QWidget):
         if self.bt_sender == '&Cerrar sesión':
             self.stacked_layout.setCurrentIndex(0)
             self.menu_file_signout.setDisabled(True)
+            self.menu_navg_home.setDisabled(True)
             self.menu_navg_mydashboard.setDisabled(True)
             self.menu_navg_processing.setDisabled(True)
             self.menu_settings_account.setDisabled(True)
@@ -404,8 +426,11 @@ class Main(QMainWindow, QWidget):
             self.menu_tools_dataload.setDisabled(True)
             self.menu_settings_users.setDisabled(True)
             self.display_passw.setChecked(False)
+            self.statusbar.showMessage('Credenciales requeridas', 3000)
+            self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Password)
         elif self.bt_sender == '&Salir':
-            pass
+            # Ask for confirmation first will be setted up here...
+            self.destroy()
         elif self.bt_sender == '&Inicio':
             self.stacked_layout.setCurrentIndex(1)
         elif self.bt_sender == '&Bandeja de asignaciones':
@@ -420,6 +445,8 @@ class Main(QMainWindow, QWidget):
             self.stacked_layout.setCurrentIndex(5)
         elif self.bt_sender == '&Mi cuenta':
             self.stacked_layout.setCurrentIndex(6)
+        elif self.bt_sender == '&Asignar solicitudes':
+            self.stacked_layout.setCurrentIndex(7)
         elif self.bt_sender == '&Documentación':
             pass
         elif self.bt_sender == '&GitHub':
