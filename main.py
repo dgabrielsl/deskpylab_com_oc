@@ -20,8 +20,8 @@ class Main(QMainWindow, QWidget):
         # Main window guidelines.
         self.setWindowIcon(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)))
         self.setWindowTitle('DeskPy - Control Operativa Cumplimiento')
-        self.setMinimumWidth(768)
-        self.setMinimumHeight(460)
+        self.setMinimumWidth(1366)
+        self.setMinimumHeight(768)
 
         # Main menu.
         menu_bar = self.menuBar()
@@ -30,7 +30,7 @@ class Main(QMainWindow, QWidget):
         menu_file = menu_bar.addMenu('&Archivo')
 
         # End user session.
-        self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Cerrar sesión', self)
+        self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogOkButton)), '&Cerrar sesión', self)
         self.menu_file_signout.setShortcut('Ctrl+Q')
         self.menu_file_signout.setStatusTip('Devuelve a la pantalla de inicio de sesión.')
         self.menu_file_signout.triggered.connect(self.menu_events)
@@ -38,7 +38,7 @@ class Main(QMainWindow, QWidget):
         menu_file.addAction(self.menu_file_signout)
 
         # Stop program.
-        self.menu_file_off = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Salir', self)
+        self.menu_file_off = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical)), '&Salir', self)
         self.menu_file_off.setShortcut('Alt+F4')
         self.menu_file_off.setStatusTip('Cierra la aplicación.')
         self.menu_file_off.triggered.connect(self.menu_events)
@@ -47,7 +47,7 @@ class Main(QMainWindow, QWidget):
         menu_navg = menu_bar.addMenu('&Navegación')
 
         # Set up assignments.
-        self.menu_navg_assign = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Asignar solicitudes', self)
+        self.menu_navg_assign = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirHomeIcon)), '&Asignar solicitudes', self)
         self.menu_navg_assign.setShortcut('')
         self.menu_navg_assign.setStatusTip('Administrar asignación de solicitudes nuevas.')
         self.menu_navg_assign.triggered.connect(self.menu_events)
@@ -55,7 +55,7 @@ class Main(QMainWindow, QWidget):
         menu_navg.addAction(self.menu_navg_assign)
 
         # Assignments dashboard.
-        self.menu_navg_mydashboard = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Bandeja de asignaciones', self)
+        self.menu_navg_mydashboard = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogListView)), '&Bandeja de asignaciones', self)
         self.menu_navg_mydashboard.setShortcut('')
         self.menu_navg_mydashboard.setStatusTip('Ver mis asignaciones diarias.')
         self.menu_navg_mydashboard.triggered.connect(self.menu_events)
@@ -63,7 +63,7 @@ class Main(QMainWindow, QWidget):
         menu_navg.addAction(self.menu_navg_mydashboard)
 
         # Processing panel.
-        self.menu_navg_processing = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Procesamiento de solicitudes', self)
+        self.menu_navg_processing = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogResetButton)), '&Procesamiento de solicitudes', self)
         self.menu_navg_processing.setShortcut('')
         self.menu_navg_processing.setStatusTip('Panel de trabajo de registros.')
         self.menu_navg_processing.triggered.connect(self.menu_events)
@@ -73,7 +73,7 @@ class Main(QMainWindow, QWidget):
         menu_tools = menu_bar.addMenu('&Herramientas')
 
         # Load new data.
-        self.menu_tools_dataload = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Cargar datos', self)
+        self.menu_tools_dataload = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogApplyButton)), '&Cargar datos', self)
         self.menu_tools_dataload.setShortcut('')
         self.menu_tools_dataload.setStatusTip('Carga datos a la base de datos desde Excel.')
         self.menu_tools_dataload.triggered.connect(self.menu_events)
@@ -81,7 +81,7 @@ class Main(QMainWindow, QWidget):
         menu_tools.addAction(self.menu_tools_dataload)
 
         # Download reports.
-        self.menu_tools_reports = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Generar reportes', self)
+        self.menu_tools_reports = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogDetailedView)), '&Generar reportes', self)
         self.menu_tools_reports.setShortcut('')
         self.menu_tools_reports.setStatusTip('Generar y descargar reportes.')
         self.menu_tools_reports.triggered.connect(self.menu_events)
@@ -91,7 +91,7 @@ class Main(QMainWindow, QWidget):
         menu_settings = menu_bar.addMenu('&Configuración')
 
         # User admin.
-        self.menu_settings_users = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Administrar usuarios', self)
+        self.menu_settings_users = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_VistaShield)), '&Administrar usuarios', self)
         self.menu_settings_users.setShortcut('Ctrl+U')
         self.menu_settings_users.setStatusTip('Agregar, modificar y eliminar usuarios.')
         self.menu_settings_users.triggered.connect(self.menu_events)
@@ -99,7 +99,7 @@ class Main(QMainWindow, QWidget):
         menu_settings.addAction(self.menu_settings_users)
 
         # My account settings.
-        self.menu_settings_account = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)), '&Mi cuenta', self)
+        self.menu_settings_account = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon)), '&Mi cuenta', self)
         self.menu_settings_account.setShortcut('Shift+U')
         self.menu_settings_account.setStatusTip('Configurar mi cuenta.')
         self.menu_settings_account.triggered.connect(self.menu_events)
@@ -135,7 +135,7 @@ class Main(QMainWindow, QWidget):
         l0 = QVBoxLayout()
 
         h1 = QLabel('Control Operativa Cumplimiento')
-        h1.setStyleSheet('margin-top: 60px; color: #fff; font-size: 20px;')
+        h1.setStyleSheet('color: #fff; font-size: 20px;')
         h1.setAlignment(Qt.AlignmentFlag.AlignCenter)
         l0.addWidget(h1)
 
@@ -165,6 +165,13 @@ class Main(QMainWindow, QWidget):
         self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Password)
         l0.addWidget(self.le_login_passw)
 
+        self.display_passw = QCheckBox('Mostrar contraseña')
+        self.display_passw.setStyleSheet('margin: 3px 0; color: #fff;')
+        self.display_passw.setFixedWidth(160)
+        self.display_passw.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.display_passw.clicked.connect(self.toggle_display_pasw)
+        l0.addWidget(self.display_passw)
+
         self.credentials_cache = QCheckBox('Recordar mis credenciales')
         self.credentials_cache.setStyleSheet('margin: 3px 0; color: #fff;')
         self.credentials_cache.setFixedWidth(160)
@@ -179,13 +186,85 @@ class Main(QMainWindow, QWidget):
         l0.addWidget(self.get_logged)
 
         l0.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        l0.addStretch()
         self.w0.setLayout(l0)
 
         l1 = QVBoxLayout()
-        l1.addWidget(QLabel('Página de inicio.'))
-        l1.addStretch()
+
+        h1 = QLabel('Hola, bienvenido(a)')
+        h1.setStyleSheet('margin-bottom: 30px; color: #fff; font-size: 15px;')
+        h1.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        l1.addWidget(h1)
+
+        shorcut1 = QPushButton('Bandeja de asignaciones')
+        shorcut1.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut1.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ff74c7; color: #704; font-size: 18px; border-radius: 12px;')
+
+        shorcut2 = QPushButton('Procesamiento de solicitudes')
+        shorcut2.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut2.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ff74c7; color: #704; font-size: 18px; border-radius: 12px;')
+
+        shorcut3 = QPushButton('Mi cuenta')
+        shorcut3.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut3.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ff74c7; color: #704; font-size: 18px; border-radius: 12px;')
+
+        wrapper1 = QHBoxLayout()
+        wrapper1.addWidget(shorcut1)
+        wrapper1.addWidget(shorcut2)
+        wrapper1.addWidget(shorcut3)
+        wrapper1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        shorcut4 = QPushButton('Asignar solicitudes')
+        shorcut4.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut4.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ffa9de; color: #704; font-size: 18px; border-radius: 12px;')
+
+        shorcut5 = QPushButton('Cargar datos')
+        shorcut5.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut5.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ffa9de; color: #704; font-size: 18px; border-radius: 12px;')
+
+        shorcut6 = QPushButton('Generar reportes')
+        shorcut6.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut6.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ffa9de; color: #704; font-size: 18px; border-radius: 12px;')
+
+        shorcut7 = QPushButton('Administrar usuarios')
+        shorcut7.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut7.setStyleSheet('margin: 5px; padding: 5px 15px; background: #ffa9de; color: #704; font-size: 18px; border-radius: 12px;')
+
+        wrapper2 = QHBoxLayout()
+        wrapper2.addWidget(shorcut4)
+        wrapper2.addWidget(shorcut5)
+        wrapper2.addWidget(shorcut6)
+        wrapper2.addWidget(shorcut7)
+        wrapper2.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        shorcut8 = QPushButton('Documentación')
+        shorcut8.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut8.setStyleSheet('margin: 5px; padding: 5px 15px; background: #db0; color: #320; font-size: 18px; border-radius: 12px;')
+
+        shorcut9 = QPushButton('GitHub')
+        shorcut9.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut9.setStyleSheet('margin: 5px; padding: 5px 15px; background: #db0; color: #320; font-size: 18px; border-radius: 12px;')
+
+        wrapper3 = QHBoxLayout()
+        wrapper3.addWidget(shorcut8)
+        wrapper3.addWidget(shorcut9)
+        wrapper3.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        l1.addLayout(wrapper1)
+        l1.addLayout(wrapper2)
+        l1.addLayout(wrapper3)
+        l1.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.w1.setLayout(l1)
+
+
+
+
+
+
+
+
+
+
+
 
         l2 = QVBoxLayout()
         l2.addWidget(QLabel('Bandeja de asignaciones'))
@@ -231,6 +310,9 @@ class Main(QMainWindow, QWidget):
         self.le_login_user.setText('system.gabriel.solano')
         self.le_login_passw.setText('root')
 
+    def toggle_display_pasw(self):
+        if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)
+        else: self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Password)
 
     def bd_settings(self):
         self.con1 = sqlite3.connect('settings.db')
@@ -262,6 +344,7 @@ class Main(QMainWindow, QWidget):
     def menu_events(self):
         self.bt_sender = self.sender().text()
         self.user_logged = []
+        self.success_log = False
 
         if self.bt_sender == 'Ingresar':
             typed_data_user = self.le_login_user.text().lower()
@@ -269,7 +352,6 @@ class Main(QMainWindow, QWidget):
 
             self.le_login_user.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #fff; border-radius: 12px;')
             self.le_login_passw.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #fff; border-radius: 12px;')
-
 
             if typed_data_user.strip() != '' and typed_data_pass.strip() != '':
                 con = sqlite3.connect('settings.db')
@@ -280,31 +362,36 @@ class Main(QMainWindow, QWidget):
                 for r in res:
                     if typed_data_user == r[0] and typed_data_pass == r[1]:
                         self.user_logged = list(r)
+                        self.success_log = True
                         break
 
-                print(self.user_logged)
+                if self.success_log:
+                    self.menu_file_signout.setDisabled(False)
+                    self.menu_navg_mydashboard.setDisabled(False)
+                    self.menu_navg_processing.setDisabled(False)
+                    self.menu_settings_account.setDisabled(False)
 
-                self.menu_file_signout.setDisabled(False)
-                self.menu_navg_mydashboard.setDisabled(False)
-                self.menu_navg_processing.setDisabled(False)
-                self.menu_settings_account.setDisabled(False)
+                    if self.user_logged[2] == 1: self.menu_navg_assign.setDisabled(False)
+                    if self.user_logged[3] == 1: self.menu_tools_reports.setDisabled(False)
+                    if self.user_logged[4] == 1: self.menu_tools_dataload.setDisabled(False)
+                    if self.user_logged[5] == 1: self.menu_settings_users.setDisabled(False)
 
-                if self.user_logged[2] == 1: self.menu_navg_assign.setDisabled(False)
-                if self.user_logged[3] == 1: self.menu_tools_reports.setDisabled(False)
-                if self.user_logged[4] == 1: self.menu_tools_dataload.setDisabled(False)
-                if self.user_logged[5] == 1: self.menu_settings_users.setDisabled(False)
+                    self.le_login_user.setText('')
+                    self.le_login_passw.setText('')
+                    self.stacked_layout.setCurrentIndex(1)
+                else:
+                    QMessageBox.warning(
+                        self,
+                        'DeskPyL',
+                        'Por favor verifique los datos ingresados.\t\t\nUsuario o clave incorrecta.',
+                        QMessageBox.StandardButton.Ok,
+                        QMessageBox.StandardButton.Ok)
+                    self.le_login_passw.setText('')
 
                 con.close()
-
-                self.le_login_user.setText('')
-                self.le_login_passw.setText('')
-                self.stacked_layout.setCurrentIndex(1)
-
             else:
                 if typed_data_user.strip() == '': self.le_login_user.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #eaa; border-radius: 12px;')
                 if typed_data_pass.strip() == '': self.le_login_passw.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #eaa; border-radius: 12px;')
-
-
 
         if self.bt_sender == '&Cerrar sesión':
             self.stacked_layout.setCurrentIndex(0)
@@ -316,6 +403,7 @@ class Main(QMainWindow, QWidget):
             self.menu_tools_reports.setDisabled(True)
             self.menu_tools_dataload.setDisabled(True)
             self.menu_settings_users.setDisabled(True)
+            self.display_passw.setChecked(False)
         elif self.bt_sender == '&Salir':
             pass
         elif self.bt_sender == '&Inicio':
@@ -340,7 +428,8 @@ class Main(QMainWindow, QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyleSheet("""
-            QWidget{background: #333;}
+            QWidget{background: #333; color: #fff;}
+            QPushButton{margin: 5px; padding: 5px 15px; background: #ff74c7; color: #aa508a; font-size: 18px; border-radius: 12px;}
         """)
     win = Main()
     sys.exit(app.exec())
