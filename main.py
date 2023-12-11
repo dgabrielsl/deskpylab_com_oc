@@ -20,8 +20,9 @@ class Main(QMainWindow, QWidget):
         # Main window guidelines.
         self.setWindowIcon(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)))
         self.setWindowTitle('DeskPy - Control Operativa Cumplimiento')
-        self.setMinimumWidth(1366)
-        self.setMinimumHeight(768)
+        self.setMinimumWidth(1080)
+        self.setMinimumHeight(480)
+        self.showMaximized()
 
         # Main menu.
         menu_bar = self.menuBar()
@@ -30,8 +31,8 @@ class Main(QMainWindow, QWidget):
         menu_file = menu_bar.addMenu('&Archivo')
 
         # Status bar.
-        self.statusbar = self.statusBar()
-        self.statusbar.showMessage('Credenciales requeridas', 3000)
+        self.statusbar. = self.statusbar.()
+        self.statusbar..showMessage('Credenciales requeridas', 3000)
 
         # End user session.
         self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogOkButton)), '&Cerrar sesión', self)
@@ -269,17 +270,6 @@ class Main(QMainWindow, QWidget):
         l1.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.w1.setLayout(l1)
 
-
-
-
-
-
-
-
-
-
-
-
         l2 = QVBoxLayout()
         l2.addWidget(QLabel('Bandeja de asignaciones'))
         l2.addStretch()
@@ -329,6 +319,8 @@ class Main(QMainWindow, QWidget):
 
         self.le_login_user.setText('system.gabriel.solano')
         self.le_login_passw.setText('root')
+        self.get_logged.click()
+        self.menu_settings_users.trigger()
 
     def toggle_display_pasw(self):
         if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)
