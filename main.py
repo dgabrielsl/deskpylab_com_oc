@@ -437,8 +437,13 @@ class Main(QMainWindow, QWidget):
         self.aule_password_2.setFixedWidth(200)
         self.aule_password_2.setStyleSheet(f'padding: 3px 10px; background: {self.color}; color: {self.base}; border-radius: 12px;')
         g.addWidget(self.aule_password_2)
+        g.setContentsMargins(0,0,0,15)
         w_b_1.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         w_b_1.addLayout(g)
+
+        self.aule_passwordsfields_change_echomode = QCheckBox('Mostrar contraseña.')
+        self.aule_passwordsfields_change_echomode.clicked.connect(self.disable_echomode_for_aule)
+        w_b_1.addWidget(self.aule_passwordsfields_change_echomode)
 
         w_b_2 = QVBoxLayout()
 
@@ -471,6 +476,7 @@ class Main(QMainWindow, QWidget):
         w.addWidget(self.au_crud_delete)
         self.au_crud_saveit.setObjectName('au_crud-1')
         self.au_crud_delete.setObjectName('au_crud-2')
+        self.au_crud_saveit.clicked.connect(self.make_au_crud_saveit)
         w.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         w.setContentsMargins(30,30,30,30)
         l5.addLayout(w)
@@ -538,10 +544,10 @@ class Main(QMainWindow, QWidget):
         else: self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Password)
 
     def bd_settings(self):
-        self.con1 = sqlite3.connect('settings.db')
-        self.cur1 = self.con1.cursor()
+        con = sqlite3.connect('settings.db')
+        cur = con.cursor()
         try:
-            self.cur1.execute('''
+            cur.execute('''
                 CREATE TABLE user_settings(
                     USER_LOGGED VARCHAR(99) UNIQUE,
                     USER_PASSWORD VARCHAR(99),
@@ -550,20 +556,16 @@ class Main(QMainWindow, QWidget):
                     LOAD_BOOK BOOLEAN,
                     ADMIN_USERS BOOLEAN,
                     LOAD_ENTRY BOOLEAN,
-                    EDIT_UPD_USERS BOOLEAN,
-                    UPDATE_LOG BOOLEAN,
-                    DELETE_LOG BOOLEAN)
+                    EDIT_UPD_USERS BOOLEAN)
                 ''')
-            record = f'INSERT INTO user_settings VALUES ("system.gabriel.solano", "root", 1, 1, 1, 1, 1, 1, 1, 1)'
-            self.cur1.execute(record)
-            record = f'INSERT INTO user_settings VALUES ("admin.gabriel.solano", "220693", 1, 1, 1, 1, 1, 1, 1, 1)'
-            self.cur1.execute(record)
-            record = f'INSERT INTO user_settings VALUES ("standard.user", "1230", 0, 0, 0, 0, 0, 0, 1, 0)'
-            self.cur1.execute(record)
-        except: pass
-        finally:
-            self.con1.commit()
-            self.con1.close()
+            record = f'INSERT INTO user_settings VALUES ("system.gabriel.solano", "root", 1, 1, 1, 1, 1, 1)'
+            cur.execute(record)
+            record = f'INSERT INTO user_settings VALUES ("paola.castro", "pca$tr0", 1, 1, 1, 1, 1, 1)'
+            cur.execute(record)
+        except Exception as e: print(e)
+
+        con.commit()
+        con.close()
 
     def menu_events(self):
         self.bt_sender = self.sender().text()
@@ -674,6 +676,14 @@ class Main(QMainWindow, QWidget):
         elif self.bt_sender == '&GitHub':
             pass
 
+    def disable_echomode_for_aule(self):
+        if self.aule_passwordsfields_change_echomode.isChecked():
+            self.aule_password.setEchoMode(QLineEdit.EchoMode.Normal)
+            self.aule_password_2.setEchoMode(QLineEdit.EchoMode.Normal)
+        else:
+            self.aule_password.setEchoMode(QLineEdit.EchoMode.Password)
+            self.aule_password_2.setEchoMode(QLineEdit.EchoMode.Password)
+
     def manage_user_changes(self):
         query = self.au_searchx.currentText()
         self.queued_user = []
@@ -685,9 +695,8 @@ class Main(QMainWindow, QWidget):
             if r[0] == query:
                 self.queued_user = list(r)
                 break
-        
+
         if len(self.queued_user) > 0:
-            self.queued_user
             if self.queued_user[2] == 1: self.au_cb_1.setChecked(True)        # DISPLAYED_NAME: Asignar solicitudes a otros usuarios
             else: self.au_cb_1.setChecked(False)
             if self.queued_user[3] == 1: self.au_cb_2.setChecked(True)        # DISPLAYED_NAME: Cargar datos nuevos
@@ -702,15 +711,90 @@ class Main(QMainWindow, QWidget):
             else: self.au_cb_6.setChecked(False)
 
             self.aule_username.setText(self.queued_user[0])
+            self.aule_password.setText(self.queued_user[1])
+            self.aule_password_2.setText(self.queued_user[1])
 
-        else: self.au_searchx.showPopup()
+            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to uptdate', 3000)
 
-        print(self.queued_user)
+        else:
+            self.au_searchx.showPopup()
+            self.statusbar.showMessage('You must have to select an user up to consult', 3000)
 
-        # self.au_crud_saveit
-        # self.au_crud_update
-        # self.au_crud_delete
+        con.close()
 
+    def make_au_crud_saveit(self):
+        query = self.aule_username.text()
+
+        self.queued_user = []
+
+        con = sqlite3.connect('settings.db')
+        cur = con.cursor()
+        cur.execute('SELECT * FROM user_settings WHERE user_logged = ?', (query,))
+        res = cur.fetchone()
+
+        def check_up_valid_entries(self):
+            self.is_valid_data = [0, 0, 0]
+
+            aule_username = self.aule_username.text()
+            aule_password = self.aule_password.text()
+            aule_password_2 = self.aule_password_2.text()
+
+        # Username check up.
+            # If username have not minimum length:
+            if len(aule_username) < 8: self.is_valid_data[0] = 1
+            else: self.is_valid_data[0] = 0
+
+        # Password check up.
+            # If passwords are differents:
+            if aule_password != aule_password_2: self.is_valid_data[1] = 1
+            else: self.is_valid_data[1] = 0
+
+            # If password have not minimum lenght:
+            if len(aule_password) < 6 or len(aule_password_2) < 6: self.is_valid_data[2] = 1
+            else: self.is_valid_data[2] = 0
+
+            warning_msg = 'Por favor corrija los campos:\n'
+
+            if self.is_valid_data[0] == 1: warning_msg += ('\nEl nombre de usuario debe ser igual o mayor a 8 letras.\t')
+            if self.is_valid_data[1] == 1: warning_msg += ('\nLas contraseñas no coinciden.\t')
+            if self.is_valid_data[2] == 1: warning_msg += ('\nLa clave de usuario debe contener al menos 6 letras.\t')
+
+            if self.is_valid_data[0] == 1 or self.is_valid_data[1] == 1 or self.is_valid_data[2] == 1:
+                QMessageBox.warning(
+                    self,
+                    'DeskPyL',
+                    warning_msg,
+                    QMessageBox.StandardButton.Ok,
+                    QMessageBox.StandardButton.Ok)
+            else:
+                QMessageBox.warning(
+                    self,
+                    'DeskPyL',
+                    f'Registro de usuario "{aule_username}" creado/actualizado correctamente.\t',
+                    QMessageBox.StandardButton.Ok,
+                    QMessageBox.StandardButton.Ok)
+
+        check_up_valid_entries(self)
+
+        if self.is_valid_data[0] == 0 and self.is_valid_data[1] == 0 and self.is_valid_data[2] == 0:
+            if res == None:
+                record = f'INSERT INTO user_settings VALUES ("{self.aule_username.text().lower()}", "{self.aule_password.text()}", {self.au_cb_1.isChecked()}, {self.au_cb_2.isChecked()}, {self.au_cb_3.isChecked()}, {self.au_cb_4.isChecked()}, {self.au_cb_5.isChecked()}, {self.au_cb_6.isChecked()})'
+                cur.execute(record)
+
+                self.au_searchx.clear()
+
+                req = cur.execute(f'SELECT * FROM user_settings')
+                res = req.fetchall()
+                for r in res:
+                    self.au_searchx.addItem(r[0])
+
+                self.statusbar.showMessage(f'The user «{self.aule_username.text().lower()}» was created sucessfully!',5000)
+
+            else:
+                write = f'UPDATE user_settings SET user_logged = "{self.aule_username.text().lower()}", user_password = "{self.aule_password.text()}", make_assignments = {self.au_cb_1.isChecked()}, load_book = {self.au_cb_2.isChecked()}, download_reports = {self.au_cb_3.isChecked()}, load_entry = {self.au_cb_4.isChecked()}, edit_upd_users = {self.au_cb_5.isChecked()}, admin_users = {self.au_cb_6.isChecked()} WHERE user_logged = ?'
+                cur.execute(write, (query,))
+
+        con.commit()
         con.close()
 
 if __name__ == '__main__':
