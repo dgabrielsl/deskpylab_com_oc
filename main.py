@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import Qt
 from plyer import notification
+from deskpy_new_book_load import *
 
 os.system('cls')
 
@@ -150,6 +151,7 @@ class Main(QMainWindow, QWidget):
         self.w5 = QWidget()             # Users admin.
         self.w6 = QWidget()             # My profile.
         self.w7 = QWidget()             # Set up assignments.
+        self.w8 = QWidget()             # Data load.
 
 # PAGE: LOGIN
         l0 = QVBoxLayout()
@@ -517,6 +519,152 @@ class Main(QMainWindow, QWidget):
         l7.addStretch()
         self.w7.setLayout(l7)
 
+# PAGE: DATA LOAD.
+        l8 = QVBoxLayout()
+
+        lgg8 = QHBoxLayout()
+        lgg8.setAlignment(Qt.AlignmentFlag.AlignTrailing)
+        self.l8_banner1 = QLabel('')
+        self.l8_banner2 = QLabel('')
+        lgg8.addWidget(QLabel('DeskPyL'))
+        lgg8.addWidget(self.l8_banner1)
+        lgg8.addWidget(self.l8_banner2)
+        l8.addLayout(lgg8)
+
+        h1 = QLabel('Gestión y consulta de carga de registros')
+        h2 = QLabel('Control Operativa Cumplimiento')
+
+        stl_h1_h2(self, h1, h2)
+
+        h1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        h2.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        wr = QVBoxLayout()
+        wr.addWidget(h1)
+        wr.addWidget(h2)
+        l8.addLayout(wr)
+
+        h3 = QLabel('CARGAR REGISTROS NUEVOS')
+        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #9a005c; color: #ffd9f7; font-size: 14px; font-weight: 600; border: 3px solid #be0976; border-radius: 9px;')
+        h3.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        l8.addWidget(h3)
+
+        self.search_workbook = QPushButton('+ Agregar libro')
+        self.search_workbook.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.search_workbook.setMaximumWidth(200)
+        self.search_workbook.setObjectName('search_workbook')
+        self.search_workbook.clicked.connect(self.logs_hub)
+
+        self.load_tag_name = QLineEdit()
+        self.load_tag_name.setPlaceholderText('Etiqueta de la carga')
+        self.load_tag_name.setFixedWidth(400)
+        self.load_tag_name.setObjectName('load_tag_name')
+
+        self.logs_count = QLabel('0')
+        self.logs_count.setFixedWidth(75)
+        self.logs_count.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter)
+        self.logs_count.setObjectName('logs_count')
+
+        self.save_new_workbook = QPushButton('Guardar')
+        self.save_new_workbook.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.save_new_workbook.setObjectName('save_new_workbook')
+        self.save_new_workbook.clicked.connect(self.logs_hub)
+
+        wr = QHBoxLayout()
+        wr.addWidget(self.search_workbook)
+        wr.addWidget(self.load_tag_name)
+        wr.addWidget(QLabel('Cantidad de registros:'))
+        wr.addWidget(self.logs_count)
+        wr.addWidget(self.save_new_workbook)
+        wr.addStretch()
+        wr.setContentsMargins(0,0,0,35)
+
+        l8.addLayout(wr)
+
+        h3 = QLabel('ADMINISTRAR CARGAS')
+        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #9a005c; color: #ffd9f7; font-size: 14px; font-weight: 600; border: 3px solid #be0976; border-radius: 9px;')
+        h3.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        l8.addWidget(h3)
+
+        self.cb_existent_logs = QComboBox()
+        self.cb_existent_logs.setPlaceholderText('Seleccione un registro')
+        self.cb_existent_logs.setObjectName('cb_existent_logs')
+        self.cb_existent_logs.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.cb_existent_logs.setMinimumWidth(400)
+
+        self.cb_existent_logs_search = QPushButton('Buscar')
+        self.cb_existent_logs_search.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.cb_existent_logs_search.setObjectName('cb_existent_logs_search')
+        self.cb_existent_logs_search.clicked.connect(self.logs_hub)
+
+        wr = QHBoxLayout()
+        wr.addWidget(QLabel('Consultar entrada de datos'))
+        wr.addWidget(self.cb_existent_logs)
+        wr.addWidget(self.cb_existent_logs_search)
+        wr.addStretch()
+
+        l8.addLayout(wr)
+
+        wr = QHBoxLayout()
+
+        l = QLabel('Fecha')
+        l.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        l.setFixedWidth(150)
+        wr.addWidget(l)
+
+        self.logs_queries_date = QLabel('')
+        self.logs_queries_date.setObjectName('logs_queries_style')
+        wr.addWidget(self.logs_queries_date)
+
+        l = QLabel('Etiqueta')
+        l.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        l.setFixedWidth(150)
+        wr.addWidget(l)
+
+        self.logs_queries_tagname = QLabel('')
+        self.logs_queries_tagname.setObjectName('logs_queries_style')
+        wr.addWidget(self.logs_queries_tagname)
+
+        self.logs_queries_download = QPushButton('Descargar')
+        self.logs_queries_download.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.logs_queries_download.setObjectName('logs_queries_download')
+        self.logs_queries_download.clicked.connect(self.logs_hub)
+        wr.addWidget(self.logs_queries_download)
+
+        l8.addLayout(wr)
+
+        wr = QHBoxLayout()
+
+        l = QLabel('Hora')
+        l.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        l.setFixedWidth(150)
+        wr.addWidget(l)
+
+        self.logs_queries_timemark = QLabel('')
+        self.logs_queries_timemark.setObjectName('logs_queries_style')
+        wr.addWidget(self.logs_queries_timemark)
+
+        l = QLabel('Cantidad de registros')
+        l.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        l.setFixedWidth(150)
+        wr.addWidget(l)
+
+        self.logs_queries_logscount = QLabel('')
+        self.logs_queries_logscount.setObjectName('logs_queries_style')
+        wr.addWidget(self.logs_queries_logscount)
+
+        self.logs_queries_suprim = QPushButton('Eliminar')
+        self.logs_queries_suprim.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.logs_queries_suprim.setObjectName('logs_queries_suprim')
+        self.logs_queries_suprim.clicked.connect(self.logs_hub)
+        wr.addWidget(self.logs_queries_suprim)
+
+        l8.addLayout(wr)
+
+        l8.addStretch()
+        self.w8.setLayout(l8)
+
+# Storing pages on main stacked layout.
         self.stacked_layout.addWidget(self.w0)
         self.stacked_layout.addWidget(self.w1)
         self.stacked_layout.addWidget(self.w2)
@@ -525,6 +673,7 @@ class Main(QMainWindow, QWidget):
         self.stacked_layout.addWidget(self.w5)
         self.stacked_layout.addWidget(self.w6)
         self.stacked_layout.addWidget(self.w7)
+        self.stacked_layout.addWidget(self.w8)
 
         self.stacked_layout.setCurrentIndex(0)
 
@@ -534,10 +683,10 @@ class Main(QMainWindow, QWidget):
 
         self.get_logged.setFocus()
 
-        self.le_login_user.setText('system.gabriel.solano')
-        self.le_login_passw.setText('root')
+        self.le_login_user.setText('paola.castro')
+        self.le_login_passw.setText('pca$tr0')
         self.get_logged.click()
-        self.menu_settings_users.trigger()
+        self.menu_tools_dataload.trigger()
 
     def toggle_display_pasw(self):
         if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -562,7 +711,8 @@ class Main(QMainWindow, QWidget):
             cur.execute(record)
             record = f'INSERT INTO user_settings VALUES ("paola.castro", "pca$tr0", 1, 1, 1, 1, 1, 1)'
             cur.execute(record)
-        except Exception as e: print(e)
+        # except Exception as e: self.statusbar.showMessage(f'{e}',5000)
+        except: pass
 
         con.commit()
         con.close()
@@ -654,7 +804,9 @@ class Main(QMainWindow, QWidget):
             self.l3_banner2.setText(self.global_username)
 
         elif self.bt_sender == '&Cargar datos':
-            pass
+            self.stacked_layout.setCurrentIndex(8)
+            self.l8_banner2.setText(self.global_username)
+
         elif self.bt_sender == '&Generar reportes':
             self.stacked_layout.setCurrentIndex(4)
             self.l4_banner2.setText(self.global_username)
@@ -796,6 +948,20 @@ class Main(QMainWindow, QWidget):
 
         con.commit()
         con.close()
+
+    def logs_hub(self):
+        sender = self.sender().text()
+
+        if sender == '+ Agregar libro':
+            print('Usuario desea cargar datos desde un libro de Excel')
+        if sender == 'Guardar':
+            print('Usuario cargó los datos y desea escribir en la bbdd')
+        if sender == 'Buscar':
+            print('Usuario desea consultar una carga previamente realizada')
+        if sender == 'Descargar':
+            print('Generar Excel con todos los registros de X carga')
+        if sender == 'Eliminar':
+            print('Borrar todas las entradas de registro que se cargaron con la etiqueta X')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
