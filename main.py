@@ -228,7 +228,19 @@ class Main(QMainWindow, QWidget):
         l1.addLayout(lgg1)
 
         h1 = QLabel('Hola, bienvenido(a)')
-        h1.setStyleSheet('margin-bottom: 30px; color: #fff; font-size: 15px;')
+        h1.setStyleSheet('margin-bottom: 10px; color: #fff; font-size: 15px;')
+        h1.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        l1.addWidget(h1)
+
+        h1 = QLabel('Control Operativa Cumplimento')
+        h1.setStyleSheet('color: #fff; font-size: 25px;')
+        h1.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        l1.addWidget(h1)
+
+        h1 = QLabel('ERP & CRM')
+        h1.setStyleSheet('margin-bottom: 35px; color: #fff; font-size: 18px;')
         h1.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         l1.addWidget(h1)

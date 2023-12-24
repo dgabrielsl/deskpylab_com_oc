@@ -32,7 +32,8 @@ class Excel():
 
         ws.delete_rows(1,4)
         # wb.save('C:/Users/gabriel.solano/Downloads/Sysde (openpyxl).xlsx')
-        wb.save('C:/Users/dgabr/Downloads/Sysde (openpyxl).xlsx')
+        saved_copy = 'C:/Users/dgabr/Downloads/Sysde (openpyxl).xlsx'
+        wb.save(saved_copy)
 
         for i in range(ws.max_column):
             i += 1
@@ -57,14 +58,16 @@ class Excel():
                 line.append(insert)
                 self.records.append(line)
 
-        try:
-            for record in self.records:
-                r = f'INSERT INTO sysde_hub VALUES ("{record[0]}", "{record[1]}", "{record[2]}", "{record[3]}")'
-                cur.execute(r)
-        except: pass
+        for record in self.records:
+            r = f'INSERT INTO sysde_hub VALUES ("{record[0]}", "{record[1]}", "{record[2]}", "{record[3]}")'
+            try: cur.execute(r)
+            except: pass
 
         con.commit()
         con.close()
+
+        try: os.remove(saved_copy)
+        except Exception as e: self.statusbar.showMessage(f'{e},10000')
 
         QMessageBox.information(
             self,
