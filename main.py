@@ -35,7 +35,7 @@ class Main(QMainWindow, QWidget):
 
         # Status bar.
         self.statusbar = self.statusBar()
-        self.statusbar.showMessage('Credenciales requeridas', 5000)
+        self.statusbar.showMessage('Credenciales requeridas',5000)
 
         # End user session.
         self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogOkButton)), '&Cerrar sesión', self)
@@ -56,7 +56,7 @@ class Main(QMainWindow, QWidget):
 
         # Set up assignments.
         self.menu_navg_home = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirHomeIcon)), '&Inicio', self)
-        self.menu_navg_home.setShortcut('')
+        self.menu_navg_home.setShortcut('F2')
         self.menu_navg_home.setStatusTip('Ver la página de inicio.')
         self.menu_navg_home.triggered.connect(self.menu_events)
         self.menu_navg_home.setDisabled(True)
@@ -247,14 +247,15 @@ class Main(QMainWindow, QWidget):
 
         shorcut1 = QPushButton('Bandeja de asignaciones')
         shorcut1.setCursor(Qt.CursorShape.PointingHandCursor)
-        shorcut1.setObjectName('shorcut1')
+        shorcut1.clicked.connect(self.menu_navg_mydashboard.triggered)
 
         shorcut2 = QPushButton('Procesamiento de solicitudes')
         shorcut2.setCursor(Qt.CursorShape.PointingHandCursor)
-        shorcut2.setObjectName('shorcut2')
+        shorcut2.clicked.connect(self.menu_navg_processing.triggered)
 
         shorcut3 = QPushButton('Mi cuenta')
         shorcut3.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut3.clicked.connect(self.menu_settings_account.triggered)
 
         wrapper1 = QHBoxLayout()
         wrapper1.addWidget(shorcut1)
@@ -264,15 +265,19 @@ class Main(QMainWindow, QWidget):
 
         shorcut4 = QPushButton('Asignar solicitudes')
         shorcut4.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut4.clicked.connect(self.menu_navg_assign.triggered)
 
         shorcut5 = QPushButton('Cargar datos')
         shorcut5.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut5.clicked.connect(self.menu_tools_dataload.triggered)
 
         shorcut6 = QPushButton('Generar reportes')
         shorcut6.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut6.clicked.connect(self.menu_tools_reports.triggered)
 
         shorcut7 = QPushButton('Administrar usuarios')
         shorcut7.setCursor(Qt.CursorShape.PointingHandCursor)
+        shorcut7.clicked.connect(self.menu_settings_users.triggered)
 
         wrapper2 = QHBoxLayout()
         wrapper2.addWidget(shorcut4)
@@ -284,10 +289,12 @@ class Main(QMainWindow, QWidget):
         shorcut8 = QPushButton('Documentación')
         shorcut8.setCursor(Qt.CursorShape.PointingHandCursor)
         shorcut8.setObjectName('shorcut8')
+        shorcut8.clicked.connect(self.tool_bar_docs.triggered)
 
         shorcut9 = QPushButton('GitHub')
         shorcut9.setCursor(Qt.CursorShape.PointingHandCursor)
         shorcut9.setObjectName('shorcut9')
+        shorcut9.clicked.connect(self.tool_bar_github.triggered)
 
         wrapper3 = QHBoxLayout()
         wrapper3.addWidget(shorcut8)
@@ -805,7 +812,7 @@ class Main(QMainWindow, QWidget):
             self.menu_tools_dataload.setDisabled(True)
             self.menu_settings_users.setDisabled(True)
             self.display_passw.setChecked(False)
-            self.statusbar.showMessage('Credenciales requeridas', 3000)
+            self.statusbar.showMessage('Credenciales requeridas',3000)
             self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Password)
         elif self.bt_sender == '&Salir':
             self.destroy()
@@ -885,11 +892,11 @@ class Main(QMainWindow, QWidget):
             self.aule_password.setText(self.queued_user[1])
             self.aule_password_2.setText(self.queued_user[1])
 
-            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to uptdate', 3000)
+            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to uptdate',3000)
 
         else:
             self.au_searchx.showPopup()
-            self.statusbar.showMessage('You must have to select an user up to consult', 3000)
+            self.statusbar.showMessage('You must have to select an user up to consult',3000)
 
         con.close()
 
