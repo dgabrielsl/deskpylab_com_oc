@@ -33,6 +33,7 @@ QPushButton#shorcut9{
     color: #fbb;
 }
 #search_workbook{
+    padding: 5px 30px;
     background: #0f0;
     color: #050;
     font-weight: 400;
@@ -68,11 +69,12 @@ QPushButton#shorcut9{
     background: #111;
     color: #fff;
     border: 1px solid #fff;
-    border-radius: 20px;
+    border-radius: 12px;
 }
 #logs_queries_download,
 #logs_queries_suprim{
     padding: 2px 30px;
+    font-size: 12px;
     border-radius: 5px;
 }
 #logs_queries_download{

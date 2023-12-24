@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import Qt
 from plyer import notification
-from deskpy_new_book_load import *
+from deskpy_excel import *
 
 os.system('cls')
 
@@ -23,7 +23,7 @@ class Main(QMainWindow, QWidget):
         self.setWindowIcon(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)))
         self.setWindowTitle('DeskPy - Control Operativa Cumplimiento')
         self.setMinimumWidth(1080)
-        self.setMinimumHeight(480)
+        self.setMinimumHeight(500)
         # self.showMaximized()
         self.setWindowFlags(Qt.WindowType.WindowMaximizeButtonHint | Qt.WindowType.WindowMinimizeButtonHint)
 
@@ -545,19 +545,25 @@ class Main(QMainWindow, QWidget):
         l8.addLayout(wr)
 
         h3 = QLabel('CARGAR REGISTROS NUEVOS')
-        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #9a005c; color: #ffd9f7; font-size: 14px; font-weight: 600; border: 3px solid #be0976; border-radius: 9px;')
+        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #444; font-size: 14px; font-weight: 600; border: 3px solid #555; border-radius: 9px;')
         h3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         l8.addWidget(h3)
 
-        self.search_workbook = QPushButton('+ Agregar libro')
+        self.search_sysde = QPushButton('+ SYSDE')
+        self.search_sysde.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.search_sysde.setMaximumWidth(200)
+        self.search_sysde.setObjectName('search_sysde')
+        self.search_sysde.clicked.connect(self.logs_hub)
+
+        self.search_workbook = QPushButton("+ Reporte HD's")
         self.search_workbook.setCursor(Qt.CursorShape.PointingHandCursor)
         self.search_workbook.setMaximumWidth(200)
         self.search_workbook.setObjectName('search_workbook')
         self.search_workbook.clicked.connect(self.logs_hub)
 
         self.load_tag_name = QLineEdit()
-        self.load_tag_name.setPlaceholderText('Etiqueta de la carga')
-        self.load_tag_name.setFixedWidth(400)
+        self.load_tag_name.setPlaceholderText("Etiqueta de la carga (reporte de HD's)")
+        self.load_tag_name.setMinimumWidth(250)
         self.load_tag_name.setObjectName('load_tag_name')
 
         self.logs_count = QLabel('0')
@@ -571,6 +577,7 @@ class Main(QMainWindow, QWidget):
         self.save_new_workbook.clicked.connect(self.logs_hub)
 
         wr = QHBoxLayout()
+        wr.addWidget(self.search_sysde)
         wr.addWidget(self.search_workbook)
         wr.addWidget(self.load_tag_name)
         wr.addWidget(QLabel('Cantidad de registros:'))
@@ -582,7 +589,7 @@ class Main(QMainWindow, QWidget):
         l8.addLayout(wr)
 
         h3 = QLabel('ADMINISTRAR CARGAS')
-        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #9a005c; color: #ffd9f7; font-size: 14px; font-weight: 600; border: 3px solid #be0976; border-radius: 9px;')
+        h3.setStyleSheet('margin: 20px 0; padding: 5px; background: #444; font-size: 14px; font-weight: 600; border: 3px solid #555; border-radius: 9px;')
         h3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         l8.addWidget(h3)
 
@@ -952,16 +959,19 @@ class Main(QMainWindow, QWidget):
     def logs_hub(self):
         sender = self.sender().text()
 
-        if sender == '+ Agregar libro':
-            print('Usuario desea cargar datos desde un libro de Excel')
-        if sender == 'Guardar':
-            print('Usuario cargó los datos y desea escribir en la bbdd')
-        if sender == 'Buscar':
-            print('Usuario desea consultar una carga previamente realizada')
-        if sender == 'Descargar':
-            print('Generar Excel con todos los registros de X carga')
-        if sender == 'Eliminar':
-            print('Borrar todas las entradas de registro que se cargaron con la etiqueta X')
+        if sender == "+ SYSDE":
+            Excel.load_sysde(self)
+
+        elif sender == "+ Reporte HD's":
+            Excel.load_book(self)
+        elif sender == 'Guardar':
+            print(sender)
+        elif sender == 'Buscar':
+            print(sender)
+        elif sender == 'Descargar':
+            print(sender)
+        elif sender == 'Eliminar':
+            print(sender)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
