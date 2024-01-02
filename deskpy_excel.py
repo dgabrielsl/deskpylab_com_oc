@@ -7,6 +7,8 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Border, Side, PatternFill, Alignment, Font
 
+import re
+
 class Excel():
     def load_sysde(self):
         con = sqlite3.connect('sysde.db')
@@ -92,6 +94,7 @@ class Excel():
         try:
             cur.execute('''
                 CREATE TABLE customers(
+                    LOAD_IDENTIFIER VARCHAR(100) UNIQUE,
                     HELPDESK VARCHAR(10) UNIQUE,
                     IDENTIFICATION VARCHAR(20),
                     DOCUMENT VARCHAR(10),
@@ -169,71 +172,173 @@ class Excel():
             if i > 1:
                 line = []
 
-                # HelpDesk / Don't clear.
+            # HelpDesk / Don't clear.
                 insert = f'{ws[helpdesk+str(i)].value}'
                 line.append(insert)
 
-                # Identification / Clear: \s - . ,
+            # Identification / Clear: \s - . ,
                 insert = f'{ws[identification+str(i)].value}'
                 insert = insert.strip().replace('-','').replace('.','').replace(',','')
                 line.append(insert)
 
-                # Document
+            # Document / Clear: \s / N n A a
                 insert = f'{ws[document+str(i)].value}'
+                insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
                 line.append(insert)
 
+            # Code / Clear: \s / N n A a
                 insert = f'{ws[code+str(i)].value}'
+                insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+                if insert == 0 or insert == '0': insert = str('0')
                 line.append(insert)
-                
+
+            # Class case.
                 insert = f'{ws[class_case+str(i)].value}'
                 line.append(insert)
-                
+
+            # Status / Prevent: \s and Customize: to uppercase
                 insert = f'{ws[status+str(i)].value}'
+                insert = insert.strip().upper()
                 line.append(insert)
-                
+
+            # Product / Prevent: \s and Customize: to uppercase
                 insert = f'{ws[product+str(i)].value}'
+                insert = insert.strip().upper()
                 line.append(insert)
-                
+
+            # Income source / Customize: to uppercase
                 insert = f'{ws[income_source+str(i)].value}'
+                insert = insert.upper()
                 line.append(insert)
-                
+
+            # Warning amount / Clear: \s N n A a ? ¢ / $
+                # Search pattern with decimal's amounts to remove it.
                 insert = f'{ws[warning_amount+str(i)].value}'
-                line.append(insert)
-                
+
+                if insert.lower().__contains__('alert') or insert.lower().__contains__('dupl'): insert = 'ALERTA DUPLICADA'
+                else:
+                # Check if there's any ¢ or $ special character to add at the end:
+                    sfx = ''
+                    if insert.__contains__('¢'): sfx = 'CRC'
+                    elif insert.__contains__('$'): sfx = 'USD'
+
+                # Normalice all to dots:
+                    insert = insert.replace(',','.')
+
+                # Remove any character if isn't digit:
+                    insert = insert.replace('/','').replace('¢','').replace('$','').replace('?','')
+                    insert = insert.replace('N','').replace('n','').replace('A','').replace('a','')
+
+                # Build up the patterns to avoid float:
+                    match_a_dot = re.search(r'\.\d$', insert)
+                    match_b_dot = re.search(r'\.\d\d$', insert)
+                    match_a_spc = re.search(r'\s\d$', insert)
+                    match_b_spc = re.search(r'\s\d\d$', insert)
+
+                # Removing decimals:
+                    if match_a_dot or match_a_spc: insert = insert[:-2]
+                    elif match_b_dot or match_b_spc: insert = insert[:-3]
+
+                # Full cleaning keeping just digits:
+                    insert = insert.replace(' ','').replace('.','')
+
+                # Split miles by dots:
+                    if len(insert) == 4: insert = f'{insert[0]}.{insert[1:]}'                           # 1.000
+                    elif len(insert) == 5: insert = f'{insert[:2]}.{insert[2:]}'                        # 10.000
+                    elif len(insert) == 6: insert = f'{insert[:3]}.{insert[3:]}'                        # 100.000
+                    elif len(insert) == 7: insert = f'{insert[0]}.{insert[1:4]}.{insert[4:]}'           # 1.000.000
+                    elif len(insert) == 8: insert = f'{insert[:2]}.{insert[2:5]}.{insert[5:]}'          # 10.000.000
+                    elif len(insert) == 9: insert = f'{insert[:3]}.{insert[3:6]}.{insert[6:]}'          # 100.000.000
+
+                # More filters:
+                    v = ws[warning_amount+str(i)].value
+                    if v == None or str(v) == '0': insert = ''
+
+                    if sfx != '': line.append(f'{insert} {sfx}')
+                    else: line.append(insert)
+
+            # Customer profile.
                 insert = f'{ws[customer_profile+str(i)].value}'
                 line.append(insert)
-                
+
+            # Deadline / Fix: save as dd/mm/yyyy
                 insert = f'{ws[deadline+str(i)].value}'
+
+                if re.search(r'^(\d{1,2}\/\d{1,2}\/\d{1,4})', insert):
+                    insert = insert.split('/')
+                    insert = f'{insert[1]}/{insert[0]}/{insert[2]}'
+
                 line.append(insert)
-                
+
+            # Notification type / Clear: N n A a /
                 insert = f'{ws[notif_type+str(i)].value}'
+                insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
                 line.append(insert)
-                
+
+            # Contact type / Clear: N n A a /               
                 insert = f'{ws[contact_type+str(i)].value}'
+                insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
                 line.append(insert)
-                
+
+            # Customer answer / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
                 insert = f'{ws[customer_answer+str(i)].value}'
+
+                if re.search(r'^\d\.\s', insert): insert = insert[3:]
+                elif re.search(r'^\d\.\D', insert): insert = insert[2:]
+
                 line.append(insert)
-                
+
+            # Assigned to / Normalize to lowercase, then capitalize
                 insert = f'{ws[assigned_to+str(i)].value}'
+                insert = insert.lower()
+                insert = insert.capitalize()
                 line.append(insert)
-                
+
+            # Author / Normalize to lowercase, then capitalize
                 insert = f'{ws[author+str(i)].value}'
+                insert = insert.lower()
+                insert = insert.capitalize()
                 line.append(insert)
-                
+
+            # Result / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
                 insert = f'{ws[result+str(i)].value}'
+
+                if re.search(r'^\d\.\s', insert): insert = insert[3:]
+                elif re.search(r'^\d\.\D', insert): insert = insert[2:]
+
                 line.append(insert)
-                
+
+            # Updated date / Clean: time, keep just date; Fix: save as dd/mm/yyyy
                 insert = f'{ws[updated+str(i)].value}'
+
+                insert = insert.split(' ')
+                insert = insert[0]
+
+                if insert.__contains__('/'): insert = insert.split('/')
+                elif insert.__contains__('-'): insert = insert.split('-')
+
+                insert = f'{insert[2]}-{insert[1]}-{insert[0]}'
+
+                print(insert)
+
                 line.append(insert)
-                
+
+            # Full name (subject) / Clean: if not name/lastname
                 insert = f'{ws[fname+str(i)].value}'
+
+                rem_s_insert = insert.split(' ')
+                insert = []
+                for rsi in rem_s_insert:
+                    if len(rsi) > 0: insert.append(rsi)
+                
+                insert = ' '.join(insert)
+                insert = insert.upper()
+
                 line.append(insert)
 
                 self.customers.append(line)
 
-        for customer in self.customers:
-            print(customer)
+        self.logs_count.setText(str(len(self.customers)))
 
         con.commit()
         con.close()

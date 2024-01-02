@@ -23,7 +23,7 @@ class Main(QMainWindow, QWidget):
         self.setWindowIcon(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)))
         self.setWindowTitle('DeskPy - Control Operativa Cumplimiento')
         self.setMinimumWidth(1080)
-        self.setMinimumHeight(500)
+        self.setMinimumHeight(550)
         # self.showMaximized()
         self.setWindowFlags(Qt.WindowType.WindowMaximizeButtonHint | Qt.WindowType.WindowMinimizeButtonHint)
 
