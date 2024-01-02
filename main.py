@@ -14,8 +14,8 @@ class Main(QMainWindow, QWidget):
     def __init__(self):
         super().__init__()
         self.init()
-        self.site()
         self.bd_settings()
+        self.site()
         self.show()
 
     def init(self):
@@ -710,7 +710,7 @@ class Main(QMainWindow, QWidget):
         self.get_logged.setFocus()
 
         self.le_login_user.setText('paola.castro')
-        self.le_login_passw.setText('pca$tr0')
+        self.le_login_passw.setText('p.Castro')
         self.get_logged.click()
         self.menu_tools_dataload.trigger()
 
@@ -735,9 +735,9 @@ class Main(QMainWindow, QWidget):
                 ''')
             record = f'INSERT INTO user_settings VALUES ("system.gabriel.solano", "root", 1, 1, 1, 1, 1, 1)'
             cur.execute(record)
-            record = f'INSERT INTO user_settings VALUES ("paola.castro", "pca$tr0", 1, 1, 1, 1, 1, 1)'
+            record = f'INSERT INTO user_settings VALUES ("paola.castro", "p.Castro", 1, 1, 1, 1, 1, 1)'
             cur.execute(record)
-        # except Exception as e: self.statusbar.showMessage(f'{e}',5000)
+        # except Exception as e: print(e)
         except: pass
 
         con.commit()
@@ -750,7 +750,7 @@ class Main(QMainWindow, QWidget):
 
         if self.bt_sender == 'Ingresar':
             typed_data_user = self.le_login_user.text().lower()
-            typed_data_pass = self.le_login_passw.text().lower()
+            typed_data_pass = self.le_login_passw.text()
 
             self.le_login_user.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #fff; border-radius: 12px;')
             self.le_login_passw.setStyleSheet('margin: 5px 0; padding: 5px 12px; color: #333; background: #fff; border-radius: 12px;')
@@ -983,6 +983,7 @@ class Main(QMainWindow, QWidget):
 
         elif sender == "+ Reporte HD's":
             Excel.load_book(self)
+
         elif sender == 'Guardar':
             print(sender)
         elif sender == 'Buscar':
@@ -994,8 +995,6 @@ class Main(QMainWindow, QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet("""
-        """)
-    app.setStyleSheet(Path('user_admin.qss').read_text())
+    app.setStyleSheet(Path('style.qss').read_text())
     win = Main()
     sys.exit(app.exec())
