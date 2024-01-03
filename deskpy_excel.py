@@ -171,6 +171,36 @@ class Excel():
 
         self.customers = []
 
+        def reduce_blanks(raw_string):
+            # Pull "insert" as "raw_string" to load in "strip_str":
+            print(f'\tIN:\t\t{raw_string}')
+            strip_str = raw_string
+
+            # Discard elements that hasn't any \s char:
+            if strip_str.__contains__(' '):
+                # Reset "raw_string" and convert it to list:
+                raw_string = []
+
+                # Split in list by spaces:
+                strip_str = strip_str.split(' ')
+
+                print(f'\tWH:\t\t{strip_str}')
+
+                for ss in strip_str:
+                    # Discard elements that are only any space char type:
+                    if ss == '' or ss == '\t' or ss == '\n' or ss == '\r' or ss == '\f' or ss == '\v' or len(ss) < 1: pass
+                    # Keep words.
+                    else: raw_string.append(ss)
+
+                print(f'\tWH:\t\t{raw_string}')
+
+                # Prevent "strip_str" from saving anything:
+                strip_str.clear()
+
+                # Response of the function:
+                raw_string = ' '.join(raw_string)
+                print(f'\tOUT:\t\t{raw_string}')
+
         for i in range(int(ws.max_row) + 1):
             if i > 1:
                 line = []
@@ -178,6 +208,7 @@ class Excel():
                 # HelpDesk / Don't clear.
                 insert = f'{ws[helpdesk+str(i)].value}'
                 if insert == '' or insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                reduce_blanks(insert)
                 print(f'hd→{insert}')
                 line.append(insert)
 
@@ -189,6 +220,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'identification→{insert}')
                 line.append(insert)
 
@@ -200,6 +232,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'document→{insert}')
                 line.append(insert)
 
@@ -213,6 +246,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'code→{insert}')
                 line.append(insert)
 
@@ -222,6 +256,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'class case→{insert}')
                 line.append(insert)
 
@@ -233,6 +268,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'status→{insert}')
                 line.append(insert)
 
@@ -244,6 +280,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'product→{insert}')
                 line.append(insert)
 
@@ -255,6 +292,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'income source→{insert}')
                 line.append(insert)
 
@@ -303,6 +341,7 @@ class Excel():
 
                     strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                     if strip_insert == '': insert = ''
+                    reduce_blanks(insert)
                     print(f'warning amount→{insert}')
                     if sfx != '': line.append(f'{insert} {sfx}')
                     else: line.append(insert)
@@ -313,6 +352,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'customer profile→{insert}')
                 line.append(insert)
 
@@ -327,6 +367,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'deadline→{insert}')
                 line.append(insert)
 
@@ -338,6 +379,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'notification type→{insert}')
                 line.append(insert)
 
@@ -349,6 +391,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'contact type→{insert}')
                 line.append(insert)
 
@@ -362,6 +405,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'customer answer→{insert}')
                 line.append(insert)
 
@@ -370,23 +414,25 @@ class Excel():
                 else:
                     insert = f'{ws[assigned_to+str(i)].value}'
                     insert = insert.lower()
-                    insert = insert.capitalize()
+                    insert = insert.title()
 
-                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                strip_insert = insert.replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'assigned to→{insert}')
                 line.append(insert)
 
-                # Author / Normalize to lowercase, then capitalize
+                # Author / Normalize to lowercase, then title
                 insert = f'{ws[author+str(i)].value}'
 
                 if insert == None or insert == 'None' or insert == 'NONE': insert = ''
                 else:
                     insert = insert.lower()
-                    insert = insert.capitalize()
+                    insert = insert.title()
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'author→{insert}')
                 line.append(insert)
 
@@ -400,6 +446,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'result→{insert}')
                 line.append(insert)
 
@@ -419,6 +466,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'updated→{insert}')
                 line.append(insert)
 
@@ -437,12 +485,16 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                reduce_blanks(insert)
                 print(f'fname→{insert}')
                 line.append(insert)
 
                 depured_line = []
                 for l in line:
                     _l_ = l.strip().replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+
+                    reduce_blanks(l)
+
                     if _l_ == '': depured_line.append('')
                     else: depured_line.append(l)
 
