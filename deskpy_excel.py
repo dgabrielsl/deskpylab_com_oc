@@ -117,8 +117,10 @@ class Excel():
                 ''')
         except Exception as e: pass
 
-        wb = openpyxl.load_workbook(wb_url)
-        ws = wb.worksheets[0]
+        try:
+            wb = openpyxl.load_workbook(wb_url)
+            ws = wb.worksheets[0]
+        except Exception as e: print(e)
 
         helpdesk = ''
         identification = ''
@@ -138,13 +140,14 @@ class Excel():
         author = ''
         result = ''
         updated = ''
-        changes_log = ''
         fname = ''
+        changes_log = ''
 
         for i in range(ws.max_column):
             i += 1
             value = ws.cell(1,i).value.lower()
-            value = value.replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ú','u').replace(':','').replace('.','')
+            value = value.replace(':','').replace('.','')
+            value = value.replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ú','u')
 
             if value.__contains__('#'): helpdesk = ws.cell(1,i).column_letter
             if value.__contains__('cedula'): identification = ws.cell(1,i).column_letter
@@ -172,77 +175,121 @@ class Excel():
             if i > 1:
                 line = []
 
-            # HelpDesk / Don't clear.
+                # HelpDesk / Don't clear.
                 insert = f'{ws[helpdesk+str(i)].value}'
+                if insert == '' or insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                print(f'hd→{insert}')
                 line.append(insert)
 
-            # Identification / Clear: \s - . ,
+                # Identification / Clear: \s - . ,
                 insert = f'{ws[identification+str(i)].value}'
-                insert = insert.strip().replace('-','').replace('.','').replace(',','')
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.strip().replace('-','').replace('.','').replace(',','')
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'identification→{insert}')
                 line.append(insert)
 
-            # Document / Clear: \s / N n A a
+                # Document / Clear: \s / N n A a
                 insert = f'{ws[document+str(i)].value}'
-                insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.strip().replace('0','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'document→{insert}')
                 line.append(insert)
 
-            # Code / Clear: \s / N n A a
+                # Code / Clear: \s / N n A a
                 insert = f'{ws[code+str(i)].value}'
-                insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
-                if insert == 0 or insert == '0': insert = str('0')
+                
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+                    if insert == 0 or insert == '0' or insert == 'None' or insert == 'NONE': insert = ''
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'code→{insert}')
                 line.append(insert)
 
-            # Class case.
+                # Class case.
                 insert = f'{ws[class_case+str(i)].value}'
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'class case→{insert}')
                 line.append(insert)
 
-            # Status / Prevent: \s and Customize: to uppercase
+                # Status / Prevent: \s and Customize: to uppercase
                 insert = f'{ws[status+str(i)].value}'
-                insert = insert.strip().upper()
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.strip().upper()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'status→{insert}')
                 line.append(insert)
 
-            # Product / Prevent: \s and Customize: to uppercase
+                # Product / Prevent: \s and Customize: to uppercase
                 insert = f'{ws[product+str(i)].value}'
-                insert = insert.strip().upper()
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.strip().upper()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'product→{insert}')
                 line.append(insert)
 
-            # Income source / Customize: to uppercase
+                # Income source / Customize: to uppercase
                 insert = f'{ws[income_source+str(i)].value}'
-                insert = insert.upper()
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.replace('N','').replace('n','').replace('A','').replace('a','').replace('/','').upper()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'income source→{insert}')
                 line.append(insert)
 
-            # Warning amount / Clear: \s N n A a ? ¢ / $
+                # Warning amount / Clear: \s N n A a ? ¢ / $
                 # Search pattern with decimal's amounts to remove it.
                 insert = f'{ws[warning_amount+str(i)].value}'
 
                 if insert.lower().__contains__('alert') or insert.lower().__contains__('dupl'): insert = 'ALERTA DUPLICADA'
                 else:
-                # Check if there's any ¢ or $ special character to add at the end:
+                    # Check if there's any ¢ or $ special character to add at the end:
                     sfx = ''
                     if insert.__contains__('¢'): sfx = 'CRC'
                     elif insert.__contains__('$'): sfx = 'USD'
 
-                # Normalice all to dots:
+                    # Normalice all to dots:
                     insert = insert.replace(',','.')
 
-                # Remove any character if isn't digit:
+                    # Remove any character if isn't digit:
                     insert = insert.replace('/','').replace('¢','').replace('$','').replace('?','')
                     insert = insert.replace('N','').replace('n','').replace('A','').replace('a','')
 
-                # Build up the patterns to avoid float:
+                    # Build up the patterns to avoid float:
                     match_a_dot = re.search(r'\.\d$', insert)
                     match_b_dot = re.search(r'\.\d\d$', insert)
                     match_a_spc = re.search(r'\s\d$', insert)
                     match_b_spc = re.search(r'\s\d\d$', insert)
 
-                # Removing decimals:
+                    # Removing decimals:
                     if match_a_dot or match_a_spc: insert = insert[:-2]
                     elif match_b_dot or match_b_spc: insert = insert[:-3]
 
-                # Full cleaning keeping just digits:
+                    # Full cleaning keeping just digits:
                     insert = insert.replace(' ','').replace('.','')
 
-                # Split miles by dots:
+                    # Split miles by dots:
                     if len(insert) == 4: insert = f'{insert[0]}.{insert[1:]}'                           # 1.000
                     elif len(insert) == 5: insert = f'{insert[:2]}.{insert[2:]}'                        # 10.000
                     elif len(insert) == 6: insert = f'{insert[:3]}.{insert[3:]}'                        # 100.000
@@ -250,95 +297,168 @@ class Excel():
                     elif len(insert) == 8: insert = f'{insert[:2]}.{insert[2:5]}.{insert[5:]}'          # 10.000.000
                     elif len(insert) == 9: insert = f'{insert[:3]}.{insert[3:6]}.{insert[6:]}'          # 100.000.000
 
-                # More filters:
+                    # More filters:
                     v = ws[warning_amount+str(i)].value
-                    if v == None or str(v) == '0': insert = ''
+                    if v == None or str(v) == '0' or insert == 'None' or insert == 'NONE': insert = ''
 
+                    strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                    if strip_insert == '': insert = ''
+                    print(f'warning amount→{insert}')
                     if sfx != '': line.append(f'{insert} {sfx}')
                     else: line.append(insert)
 
-            # Customer profile.
+                # Customer profile.
                 insert = f'{ws[customer_profile+str(i)].value}'
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'customer profile→{insert}')
                 line.append(insert)
 
-            # Deadline / Fix: save as dd/mm/yyyy
+                # Deadline / Fix: save as dd/mm/yyyy
                 insert = f'{ws[deadline+str(i)].value}'
 
-                if re.search(r'^(\d{1,2}\/\d{1,2}\/\d{1,4})', insert):
-                    insert = insert.split('/')
-                    insert = f'{insert[1]}/{insert[0]}/{insert[2]}'
+                if insert == None or insert == '' or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    if re.search(r'^(\d{1,2}\/\d{1,2}\/\d{1,4})', insert):
+                        insert = insert.split('/')
+                        insert = f'{insert[1]}/{insert[0]}/{insert[2]}'
 
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'deadline→{insert}')
                 line.append(insert)
 
-            # Notification type / Clear: N n A a /
+                # Notification type / Clear: N n A a /
                 insert = f'{ws[notif_type+str(i)].value}'
-                insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'notification type→{insert}')
                 line.append(insert)
 
-            # Contact type / Clear: N n A a /               
+                # Contact type / Clear: N n A a /               
                 insert = f'{ws[contact_type+str(i)].value}'
-                insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else: insert = insert.replace(' ','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'contact type→{insert}')
                 line.append(insert)
 
-            # Customer answer / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
+                # Customer answer / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
                 insert = f'{ws[customer_answer+str(i)].value}'
 
-                if re.search(r'^\d\.\s', insert): insert = insert[3:]
-                elif re.search(r'^\d\.\D', insert): insert = insert[2:]
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    if re.search(r'^\d\.\s', insert): insert = insert[3:]
+                    elif re.search(r'^\d\.\D', insert): insert = insert[2:]
 
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'customer answer→{insert}')
                 line.append(insert)
 
-            # Assigned to / Normalize to lowercase, then capitalize
-                insert = f'{ws[assigned_to+str(i)].value}'
-                insert = insert.lower()
-                insert = insert.capitalize()
+                # Assigned to / Normalize to lowercase, then capitalize
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    insert = f'{ws[assigned_to+str(i)].value}'
+                    insert = insert.lower()
+                    insert = insert.capitalize()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'assigned to→{insert}')
                 line.append(insert)
 
-            # Author / Normalize to lowercase, then capitalize
+                # Author / Normalize to lowercase, then capitalize
                 insert = f'{ws[author+str(i)].value}'
-                insert = insert.lower()
-                insert = insert.capitalize()
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    insert = insert.lower()
+                    insert = insert.capitalize()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'author→{insert}')
                 line.append(insert)
 
-            # Result / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
+                # Result / Clear: prefix number, dot and sometimes \s at the beggining of the text by pattern searching.
                 insert = f'{ws[result+str(i)].value}'
 
-                if re.search(r'^\d\.\s', insert): insert = insert[3:]
-                elif re.search(r'^\d\.\D', insert): insert = insert[2:]
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    if re.search(r'^\d\.\s', insert): insert = insert[3:]
+                    elif re.search(r'^\d\.\D', insert): insert = insert[2:]
 
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'result→{insert}')
                 line.append(insert)
 
-            # Updated date / Clean: time, keep just date; Fix: save as dd/mm/yyyy
+                # Updated / Clean: time, keep just date; Fix: save as dd/mm/yyyy
                 insert = f'{ws[updated+str(i)].value}'
 
-                insert = insert.split(' ')
-                insert = insert[0]
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    insert = insert.split(' ')
+                    insert = insert[0]
 
-                if insert.__contains__('/'): insert = insert.split('/')
-                elif insert.__contains__('-'): insert = insert.split('-')
+                    if insert.__contains__('/'): insert = insert.split('/')
+                    elif insert.__contains__('-'): insert = insert.split('-')
 
-                insert = f'{insert[2]}-{insert[1]}-{insert[0]}'
+                    try: insert = f'{insert[2]}/{insert[1]}/{insert[0]}'
+                    except: pass
 
-                print(insert)
-
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'updated→{insert}')
                 line.append(insert)
 
-            # Full name (subject) / Clean: if not name/lastname
+                # Full name (subject) / Clean: if not name/lastname
                 insert = f'{ws[fname+str(i)].value}'
 
-                rem_s_insert = insert.split(' ')
-                insert = []
-                for rsi in rem_s_insert:
-                    if len(rsi) > 0: insert.append(rsi)
-                
-                insert = ' '.join(insert)
-                insert = insert.upper()
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
+                else:
+                    rem_s_insert = insert.split(' ')
+                    insert = []
+                    for rsi in rem_s_insert:
+                        if len(rsi) > 0: insert.append(rsi)
 
+                    insert = ' '.join(insert)
+                    insert = insert.upper()
+
+                strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                if strip_insert == '': insert = ''
+                print(f'fname→{insert}')
                 line.append(insert)
+
+                depured_line = []
+                for l in line:
+                    _l_ = l.strip().replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+                    if _l_ == '': depured_line.append('')
+                    else: depured_line.append(l)
+
+                line.clear()
+                line = depured_line
+                depured_line = []
 
                 self.customers.append(line)
 
         self.logs_count.setText(str(len(self.customers)))
+
+        # for c in self.customers:
+        #     print(f'****************************************************************************\nSolicitud #{c[1]}')
+        #     for cc in c:
+        #         print(cc)
+        #     print('****************************************************************************\n\n')
 
         con.commit()
         con.close()
