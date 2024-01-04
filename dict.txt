@@ -18,20 +18,9 @@ _
 7
 8
 9
- de 
- gg 
- id
- no 
- y 
- i 
- s 
- sm
-sm 
- im 
- b 
- r 
 ingresos
 datos
+activar
 alertas
 articulo
 artículo
@@ -50,12 +39,19 @@ smat
 samrt
 revexpedientes
 revisiónexpediente
+revisión
+revision
+expedientes
+expediente
 consultas
 consulta
+liberación
+liberacion
 transacción
 transaccion
 actualizacion
 actualización
+actulización
 actualizar
 alerta
 alrta
@@ -85,8 +81,11 @@ error
 fatca
 fondo
 id 
-inactivacion
+autorización
+autorizacion
 inactivación
+inactivacion
+ingresar
 ingreso
 inscrito
 licencia
@@ -113,6 +112,8 @@ dato
 cancelaciión
 actualiación
 actualiacion
+actualiazación
+actualiazacion
 vario
 puc
 cancelació
@@ -122,5 +123,25 @@ kit
 app
 a ln
  ln 
+ln 
 lista
 negra
+clliente
+bloqueo
+parcial
+ajuste
+perfil
+mensual
+critpo
+rev 
+ de 
+ gg 
+ id
+ no 
+ y 
+ i 
+ s 
+sm 
+ im 
+ b 
+ r 

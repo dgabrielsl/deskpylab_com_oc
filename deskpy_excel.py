@@ -215,6 +215,7 @@ class Excel():
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
                 if not re.search(r'\d', insert): insert = ''
+                if insert == '0' or insert == 0: insert = ''
                 # print(f'document→{insert}')
                 line.append(insert)
 
@@ -237,6 +238,7 @@ class Excel():
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                if insert == '0' or insert == 0: insert = ''
                 # print(f'class case→{insert}')
                 line.append(insert)
 
@@ -357,7 +359,6 @@ class Excel():
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
                 # print(f'deadline→{insert}')
-                print(f'\t\tDeadline: {insert}')
                 line.append(insert)
 
                 # Notification type / Clear: N n A a /
@@ -475,11 +476,12 @@ class Excel():
                             insert = insert.replace(c,'')
                     except Exception as e: print(e)
                     insert = insert.upper()
+
                 # print(f'fname→{insert}')
-                # print(f'{insert}')
                 line.append(insert)
 
                 depured_line = []
+
                 for l in line:
                     _l_ = l.strip().replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
 
@@ -494,8 +496,8 @@ class Excel():
                             strip_str = strip_str.split(' ')
 
                             for ss in strip_str:
-                                if ss == '' or ss == '\t' or ss == '\n' or ss == '\r' or ss == '\f' or ss == '\v' or len(ss) < 1: pass
-                                else: l.append(ss.replace('\t',''))
+                                if ss.__contains__('') or ss.__contains__('\t') or ss.__contains__('\n') or ss.__contains__('\r') or ss.__contains__('\f') or ss.__contains__('\v'): pass
+                                else: l.append(ss.replace(' ','').replace('\t',''))
 
                             strip_str.clear()
                             l = ' '.join(l)
@@ -506,7 +508,7 @@ class Excel():
                 line = depured_line
                 depured_line = []
 
-                print(f'>>> HD:\t\t{line[0]}')
+                # print(f'>>> HD:\t\t{line[0]}')
                 self.customers.append(line)
 
         self.logs_count.setText(str(len(self.customers)))
@@ -538,6 +540,17 @@ class Excel():
                                 record = f'INSERT INTO customers VALUES ("{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
                                 cur.execute(record)
                             except Exception as e: print(e)
+
+                        QMessageBox.information(
+                            self,
+                            'DeskPyL COM',
+                            f'\nRegistros procesados: {len(self.customers)}.\t\nNombre de la etiqueta: {query}.\t\n',
+                            QMessageBox.StandardButton.Ok,
+                            QMessageBox.StandardButton.Ok)
+                        
+                        self.load_tag_name.setText('')
+                        self.logs_count.setText('')
+
                     else:
                         QMessageBox.information(
                             self,
