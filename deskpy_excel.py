@@ -337,15 +337,27 @@ class Excel():
                 # Deadline / Fix: save as dd/mm/yyyy
                 insert = f'{ws[deadline+str(i)].value}'
 
-                if insert == None or insert == '' or insert == 'None' or insert == 'NONE': insert = ''
+                # if insert == None or insert == '' or insert == 'None' or insert == 'NONE': insert = ''
+                # else:
+                #     if re.search(r'^(\d{1,2}\/\d{1,2}\/\d{1,4})', insert):
+                #         insert = insert.split('/')
+                #         insert = f'{insert[1]}/{insert[0]}/{insert[2]}'
+
+                if insert == None or insert == 'None' or insert == 'NONE': insert = ''
                 else:
-                    if re.search(r'^(\d{1,2}\/\d{1,2}\/\d{1,4})', insert):
-                        insert = insert.split('/')
-                        insert = f'{insert[1]}/{insert[0]}/{insert[2]}'
+                    insert = insert.split(' ')
+                    insert = insert[0]
+
+                    if insert.__contains__('/'): insert = insert.split('/')
+                    elif insert.__contains__('-'): insert = insert.split('-')
+
+                    try: insert = f'{insert[2]}/{insert[1]}/{insert[0]}'
+                    except: pass
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
                 # print(f'deadline→{insert}')
+                print(f'\t\tDeadline: {insert}')
                 line.append(insert)
 
                 # Notification type / Clear: N n A a /
@@ -494,11 +506,7 @@ class Excel():
                 line = depured_line
                 depured_line = []
 
-                print(f'len(line): {len(line)} >>> HD #{line[0]}')
-                if len(line) != 19:
-                    print(line)
-                    os.system('pause')
-
+                print(f'>>> HD:\t\t{line[0]}')
                 self.customers.append(line)
 
         self.logs_count.setText(str(len(self.customers)))
@@ -527,8 +535,6 @@ class Excel():
                     if not re.search(r' ', query) and not re.search(r'\t', query):
                         for c in self.customers:
                             try:
-                                if len(c) == 18: c.append('')
-                                print(f'>>> HD #{c[0]}')
                                 record = f'INSERT INTO customers VALUES ("{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
                                 cur.execute(record)
                             except Exception as e: print(e)
