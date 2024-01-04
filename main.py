@@ -740,6 +740,18 @@ class Main(QMainWindow, QWidget):
         # except Exception as e: print(e)
         except: pass
 
+        try:
+            with open('dict.txt', 'r', encoding='utf8') as f:
+                content = f.readlines()
+
+            self.dict_raw_txt = []
+
+            for c in content:
+                self.dict_raw_txt.append(c.replace('\n',''))
+
+        # except Exception as e: print(e)
+        except: pass
+
         con.commit()
         con.close()
 
@@ -985,7 +997,8 @@ class Main(QMainWindow, QWidget):
             Excel.load_book(self)
 
         elif sender == 'Guardar':
-            print(sender)
+            Excel.write_customers(self)
+
         elif sender == 'Buscar':
             print(sender)
         elif sender == 'Descargar':

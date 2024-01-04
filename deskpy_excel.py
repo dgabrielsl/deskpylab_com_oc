@@ -94,7 +94,7 @@ class Excel():
         try:
             cur.execute('''
                 CREATE TABLE customers(
-                    LOAD_IDENTIFIER VARCHAR(100) UNIQUE,
+                    LOAD_IDENTIFIER VARCHAR(100),
                     HELPDESK VARCHAR(10) UNIQUE,
                     IDENTIFICATION VARCHAR(20),
                     DOCUMENT VARCHAR(10),
@@ -113,7 +113,8 @@ class Excel():
                     AUTHOR VARCHAR(50),
                     RESULT VARCHAR(100),
                     UPDATED VARCHAR(20),
-                    CHANGES_LOG VARCHAR(3000))
+                    FNAME VARCHAR(150),
+                    CHANGES_LOG VARCHAR(5000))
                 ''')
         except Exception as e: pass
 
@@ -141,7 +142,6 @@ class Excel():
         result = ''
         updated = ''
         fname = ''
-        changes_log = ''
 
         for i in range(ws.max_column):
             i += 1
@@ -210,10 +210,11 @@ class Excel():
                 insert = f'{ws[document+str(i)].value}'
 
                 if insert == None or insert == 'None' or insert == 'NONE': insert = ''
-                else: insert = insert.strip().replace('0','').replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
+                else: insert = insert.strip().replace('N','').replace('n','').replace('A','').replace('a','').replace('/','')
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                if not re.search(r'\d', insert): insert = ''
                 # print(f'document→{insert}')
                 line.append(insert)
 
@@ -265,7 +266,7 @@ class Excel():
                 insert = f'{ws[income_source+str(i)].value}'
 
                 if insert == None or insert == 'None' or insert == 'NONE': insert = ''
-                else: insert = insert.replace('N','').replace('n','').replace('A','').replace('a','').replace('/','').upper()
+                else: insert = insert.replace('N/A','').replace('n/a','').replace('N/a','').replace('n/A','').upper()
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
@@ -276,7 +277,9 @@ class Excel():
                 # Search pattern with decimal's amounts to remove it.
                 insert = f'{ws[warning_amount+str(i)].value}'
 
-                if insert.lower().__contains__('alert') or insert.lower().__contains__('dupl'): insert = 'ALERTA DUPLICADA'
+                if insert.lower().__contains__('alert') or insert.lower().__contains__('dupl'):
+                    insert = 'ALERTA DUPLICADA'
+                    line.append(insert)
                 else:
                     # Check if there's any ¢ or $ special character to add at the end:
                     sfx = ''
@@ -451,8 +454,17 @@ class Excel():
                     insert = insert.upper()
 
                 strip_insert = insert.replace(' ','').replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
+
                 if strip_insert == '': insert = ''
+                else:
+                    try:
+                        insert = insert.lower()
+                        for c in self.dict_raw_txt:
+                            insert = insert.replace(c,'')
+                    except Exception as e: print(e)
+                    insert = insert.upper()
                 # print(f'fname→{insert}')
+                # print(f'{insert}')
                 line.append(insert)
 
                 depured_line = []
@@ -463,17 +475,15 @@ class Excel():
 
                     if _l_ == '': depured_line.append('')
                     else:
-
                         strip_str = l
 
                         if strip_str.__contains__('  ') or strip_str.__contains__('\t') or strip_str.__contains__('\n') or strip_str.__contains__('\r') or strip_str.__contains__('\f') or strip_str.__contains__('\v'):
-                            print(strip_str)
                             l = []
                             strip_str = strip_str.split(' ')
 
                             for ss in strip_str:
                                 if ss == '' or ss == '\t' or ss == '\n' or ss == '\r' or ss == '\f' or ss == '\v' or len(ss) < 1: pass
-                                else: l.append(ss)
+                                else: l.append(ss.replace('\t',''))
 
                             strip_str.clear()
                             l = ' '.join(l)
@@ -484,19 +494,74 @@ class Excel():
                 line = depured_line
                 depured_line = []
 
+                print(f'len(line): {len(line)} >>> HD #{line[0]}')
+                if len(line) != 19:
+                    print(line)
+                    os.system('pause')
+
                 self.customers.append(line)
 
         self.logs_count.setText(str(len(self.customers)))
 
-        for c in self.customers:
-            for cc in c:
-                print(cc)
+        QMessageBox.information(
+            self,
+            'DeskPyL COM',
+            f'\nLa carga ha sido completada.\t\n{len(self.customers)} nuevos registros preparados para guardar.\t\n',
+            QMessageBox.StandardButton.Ok,
+            QMessageBox.StandardButton.Ok)
 
         con.commit()
         con.close()
 
-    def read_book(self):
-        pass
+    def write_customers(self):
+        query = self.load_tag_name.text()
 
-    def write_book(self):
-        pass
+        if not query.strip() == '':
+            if len(query) > 9:
+                con = sqlite3.connect('hub.db')
+                cur = con.cursor()
+                cur.execute('SELECT * FROM customers WHERE load_identifier = ?', (query,))
+                res = cur.fetchone()
+
+                if res == None:
+                    if not re.search(r' ', query) and not re.search(r'\t', query):
+                        for c in self.customers:
+                            try:
+                                if len(c) == 18: c.append('')
+                                print(f'>>> HD #{c[0]}')
+                                record = f'INSERT INTO customers VALUES ("{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
+                                cur.execute(record)
+                            except Exception as e: print(e)
+                    else:
+                        QMessageBox.information(
+                            self,
+                            'DeskPyL COM',
+                            f'\nEl nombre de la etiqueta no puede contener espacios en blanco, tabulaciones o saltos de línea.\t\nPuede utilizar "_" en lugar de espacio.\t\n',
+                            QMessageBox.StandardButton.Ok,
+                            QMessageBox.StandardButton.Ok)
+                else:
+                    QMessageBox.information(
+                        self,
+                        'DeskPyL COM',
+                        f'\nPara administrar más eficientemente los registrsos, el nombre de la etiqueta de carga debe ser única.\t\n"{query}" ya existe, por favor ingrese una etiqueta diferente para continuar.\t\n',
+                        QMessageBox.StandardButton.Ok,
+                        QMessageBox.StandardButton.Ok)
+
+                con.commit()
+                con.close()
+
+            else:
+                QMessageBox.information(
+                    self,
+                    'DeskPyL COM',
+                    f'\nEl nombre de la etiqueta debe contener al menos 10 caracteres (letras).\t\n',
+                    QMessageBox.StandardButton.Ok,
+                    QMessageBox.StandardButton.Ok)
+        else:
+            QMessageBox.information(
+                self,
+                'DeskPyL COM',
+                f'\nPor favor ingrese un nombre de etiqueta único para asociar a la carga de datos en proceso.\t\n',
+                QMessageBox.StandardButton.Ok,
+                QMessageBox.StandardButton.Ok)
+        
