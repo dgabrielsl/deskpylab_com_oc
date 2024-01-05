@@ -8,6 +8,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Border, Side, PatternFill, Alignment, Font
 
 import re
+from datetime import datetime
 
 class Excel():
     def load_sysde(self):
@@ -90,33 +91,6 @@ class Excel():
 
         con = sqlite3.connect('hub.db')
         cur = con.cursor()
-
-        try:
-            cur.execute('''
-                CREATE TABLE customers(
-                    LOAD_IDENTIFIER VARCHAR(100),
-                    HELPDESK VARCHAR(10) UNIQUE,
-                    IDENTIFICATION VARCHAR(20),
-                    DOCUMENT VARCHAR(10),
-                    CODE VARCHAR(10),
-                    CLASS_CASE VARCHAR(100),
-                    STATUS VARCHAR(20),
-                    PRODUCT VARCHAR(20),
-                    INCOME_SOURCE VARCHAR(300),
-                    WARNING_AMOUNT VARCHAR(20),
-                    CUSTOMER_PROFILE VARCHAR(200),
-                    DEADLINE VARCHAR(20),
-                    NOTIF_TYPE VARCHAR(20),
-                    CONTACT_TYPE VARCHAR(20),
-                    CUSTOMER_ANSWER VARCHAR(200),
-                    ASSIGNED_TO VARCHAR(50),
-                    AUTHOR VARCHAR(50),
-                    RESULT VARCHAR(100),
-                    UPDATED VARCHAR(20),
-                    FNAME VARCHAR(150),
-                    CHANGES_LOG VARCHAR(5000))
-                ''')
-        except Exception as e: pass
 
         try:
             wb = openpyxl.load_workbook(wb_url)
@@ -537,7 +511,9 @@ class Excel():
                     if not re.search(r' ', query) and not re.search(r'\t', query):
                         for c in self.customers:
                             try:
-                                record = f'INSERT INTO customers VALUES ("{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
+                                dt = datetime.now()
+                                dt = dt = f'{dt.day}/{dt.month}/{dt.year} {dt.hour}H {dt.minute}M {dt.second}S'
+                                record = f'INSERT INTO customers VALUES ("{dt}", "{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
                                 cur.execute(record)
                             except Exception as e: print(e)
 
@@ -584,3 +560,24 @@ class Excel():
                 QMessageBox.StandardButton.Ok,
                 QMessageBox.StandardButton.Ok)
         
+    def f5_hub_tagnames(self):
+        con = sqlite3.connect('hub.db')
+        cur = con.cursor()
+
+        req = cur.execute('SELECT * FROM customers')
+        res = req.fetchall()
+
+        self.tagnames = {}
+        self.tagnames = set(self.tagnames)
+
+        try:
+            for r in res:
+                self.tagnames.add(r[1])
+
+            self.cb_existent_logs.addItems(self.tagnames)
+            if len(self.tagnames) == 0: self.cb_existent_logs.setPlaceholderText('No hay registros que mostrar')
+
+        # except Exception as e: print(e)
+        except: pass
+
+        con.close()

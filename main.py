@@ -690,6 +690,8 @@ class Main(QMainWindow, QWidget):
         l8.addStretch()
         self.w8.setLayout(l8)
 
+        Excel.f5_hub_tagnames(self)
+
 # Storing pages on main stacked layout.
         self.stacked_layout.addWidget(self.w0)
         self.stacked_layout.addWidget(self.w1)
@@ -751,6 +753,40 @@ class Main(QMainWindow, QWidget):
 
         # except Exception as e: print(e)
         except: pass
+
+        con.commit()
+        con.close()
+
+        con = sqlite3.connect('hub.db')
+        cur = con.cursor()
+
+        try:
+            cur.execute('''
+                CREATE TABLE customers(
+                    DATETIME VARCHAR(25),
+                    LOAD_IDENTIFIER VARCHAR(100),
+                    HELPDESK VARCHAR(10) UNIQUE,
+                    IDENTIFICATION VARCHAR(20),
+                    DOCUMENT VARCHAR(10),
+                    CODE VARCHAR(10),
+                    CLASS_CASE VARCHAR(100),
+                    STATUS VARCHAR(20),
+                    PRODUCT VARCHAR(20),
+                    INCOME_SOURCE VARCHAR(300),
+                    WARNING_AMOUNT VARCHAR(20),
+                    CUSTOMER_PROFILE VARCHAR(200),
+                    DEADLINE VARCHAR(20),
+                    NOTIF_TYPE VARCHAR(20),
+                    CONTACT_TYPE VARCHAR(20),
+                    CUSTOMER_ANSWER VARCHAR(200),
+                    ASSIGNED_TO VARCHAR(50),
+                    AUTHOR VARCHAR(50),
+                    RESULT VARCHAR(100),
+                    UPDATED VARCHAR(20),
+                    FNAME VARCHAR(150),
+                    CHANGES_LOG VARCHAR(5000))
+                ''')
+        except Exception as e: pass
 
         con.commit()
         con.close()
@@ -998,9 +1034,34 @@ class Main(QMainWindow, QWidget):
 
         elif sender == 'Guardar':
             Excel.write_customers(self)
+            Excel.f5_hub_tagnames(self)
 
         elif sender == 'Buscar':
-            print(sender)
+            con = sqlite3.connect('hub.db')
+            cur = con.cursor()
+
+            query = self.cb_existent_logs.currentText()
+
+            try:
+                cur.execute('SELECT * FROM customers WHERE load_identifier = ?', (query,))
+                res = cur.fetchone()
+                tagname_size = cur.fetchall()
+                tagname_size = len(tagname_size)
+                tagname_size = int(tagname_size + 1)
+
+                dt = res[0]
+                dt = dt.split(' ')
+
+                self.logs_queries_date.setText(dt[0])
+                self.logs_queries_timemark.setText(dt[1])
+                self.logs_queries_tagname.setText(res[1])
+                self.logs_queries_logscount.setText(str(tagname_size))
+
+            # except Exception as e: print(e)
+            except: pass
+
+            con.close()
+
         elif sender == 'Descargar':
             print(sender)
         elif sender == 'Eliminar':
