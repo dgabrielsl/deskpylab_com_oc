@@ -1,18 +1,32 @@
 QWidget{
-    background: #333; color: #fff;
+    background: #111;
+    color: #fff;
 }
 QPushButton{
     margin: 5px;
     padding: 5px 15px;
-    background: #ff74c7;
-    color: #704;
-    font-size: 18px;
-    border-radius: 12px;
+    background: #142;
+    color: #0F0;
+    font-size: 14px;
+    border-radius: 3px;
+    border: 1px solid #0F0;
 }
-QPushButton#shorcut8,
-QPushButton#shorcut9{
-    background: #db0;
-    color: #320;
+QPushButton:hover{
+    background: #153;
+}
+QPushButton:focus{
+    background: #132;
+}
+#menu_bar{
+    background: #041;
+    color: #0f0;
+}
+#menu_bar::item:item{
+    background: red;
+}
+#status_bar{
+    background: #333;
+    color: #fff;
 }
 #au_searchx{
     padding: 3px;
@@ -32,17 +46,18 @@ QPushButton#shorcut9{
     background: #cc4030;
     color: #fbb;
 }
-#search_workbook{
-    padding: 5px 30px;
-    background: #0f0;
-    color: #050;
-    font-weight: 400;
-}
 #load_tag_name{
     margin: 0 5px;
     padding: 5px;
-    background: #fff;
-    color: #000;
+    background: #333;
+    color: #0f0;
+}
+#load_tag_name:hover{
+    background: #444;
+    background: #222;
+}
+#load_tag_name:focus{
+    border: 1px solid #0f0;
 }
 #save_new_workbook{
     margin: 0 20px;
@@ -70,26 +85,4 @@ QPushButton#shorcut9{
     color: #fff;
     border: 1px solid #fff;
     border-radius: 12px;
-}
-#logs_queries_download,
-#logs_queries_suprim{
-    padding: 2px 30px;
-    font-size: 12px;
-    border-radius: 5px;
-}
-#logs_queries_download{
-    background: #0d0;
-    color: #050;
-    border: 1px outset #fff;
-}
-#logs_queries_suprim{
-    background: #a00;
-    color: #faa;
-    border: 1px outset #fff;
-}
-#logs_queries_download:hover{
-    background: #0f0;
-}
-#logs_queries_suprim:hover{
-    background: #c00;
 }

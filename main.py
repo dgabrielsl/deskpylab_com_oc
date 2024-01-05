@@ -29,13 +29,14 @@ class Main(QMainWindow, QWidget):
 
         # Main menu.
         menu_bar = self.menuBar()
-        menu_bar.setStyleSheet('color: #ff74c7; background: #201;')
+        menu_bar.setObjectName('menu_bar')
 
         menu_file = menu_bar.addMenu('&Archivo')
 
         # Status bar.
         self.statusbar = self.statusBar()
         self.statusbar.showMessage('Credenciales requeridas',5000)
+        self.statusbar.setObjectName('status_bar')
 
         # End user session.
         self.menu_file_signout = QAction(QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DialogOkButton)), '&Cerrar sesión', self)
