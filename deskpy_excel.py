@@ -509,23 +509,26 @@ class Excel():
 
                 if res == None:
                     if not re.search(r' ', query) and not re.search(r'\t', query):
-                        for c in self.customers:
-                            try:
-                                dt = datetime.now()
-                                dt = dt = f'{dt.day}/{dt.month}/{dt.year} {dt.hour}H {dt.minute}M {dt.second}S'
-                                record = f'INSERT INTO customers VALUES ("{dt}", "{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
-                                cur.execute(record)
-                            except Exception as e: print(e)
+                        try:
+                            for c in self.customers:
+                                try:
+                                    dt = datetime.now()
+                                    dt = dt = f'{dt.day}/{dt.month}/{dt.year} {dt.hour}H {dt.minute}M {dt.second}S'
+                                    record = f'INSERT INTO customers VALUES ("{dt}", "{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
+                                    cur.execute(record)
+                                except Exception as e: print(e)
 
-                        QMessageBox.information(
-                            self,
-                            'DeskPyL COM',
-                            f'\nRegistros procesados: {len(self.customers)}.\t\nNombre de la etiqueta: {query}.\t\n',
-                            QMessageBox.StandardButton.Ok,
-                            QMessageBox.StandardButton.Ok)
-                        
-                        self.load_tag_name.setText('')
-                        self.logs_count.setText('')
+                            QMessageBox.information(
+                                self,
+                                'DeskPyL COM',
+                                f'\nRegistros procesados: {len(self.customers)}.\t\nNombre de la etiqueta: {query}.\t\n',
+                                QMessageBox.StandardButton.Ok,
+                                QMessageBox.StandardButton.Ok)
+                            
+                            self.load_tag_name.setText('')
+                            self.logs_count.setText('')
+
+                        except Exception as e: print(e)
 
                     else:
                         QMessageBox.information(
@@ -569,6 +572,8 @@ class Excel():
 
         self.tagnames = {}
         self.tagnames = set(self.tagnames)
+
+        self.cb_existent_logs.clear()
 
         try:
             for r in res:

@@ -203,7 +203,6 @@ class Main(QMainWindow, QWidget):
         l0.addWidget(self.credentials_cache)
 
         self.get_logged = QPushButton('Ingresar')
-        self.get_logged.setStyleSheet('margin: 5px 0; padding: 5px; background: #ff74c7; color: #333; border-radius: 12px;')
         self.get_logged.setFixedWidth(375)
         self.get_logged.setCursor(Qt.CursorShape.PointingHandCursor)
         self.get_logged.clicked.connect(self.menu_events)
@@ -417,7 +416,7 @@ class Main(QMainWindow, QWidget):
         w_a.addWidget(self.au_searchx)
 
         self.au_make_query = QPushButton('Buscar')
-        self.au_make_query.setStyleSheet(f'padding: 3px 20px; color: {self.base}; font-size: 12px; border-radius: 9px;')
+        self.au_make_query.setStyleSheet(f'padding: 3px 20px; color: #0f0; font-size: 12px; border-radius: 9px;')
         self.au_make_query.setCursor(Qt.CursorShape.PointingHandCursor)
         self.au_make_query.clicked.connect(self.manage_user_changes)
 
@@ -436,7 +435,7 @@ class Main(QMainWindow, QWidget):
         self.aule_username = QLineEdit()
         self.aule_username.setFixedWidth(200)
         g.addWidget(self.aule_username)
-        self.aule_username.setStyleSheet(f'padding: 3px 10px; background: {self.color}; color: {self.base}; border-radius: 12px;')
+        self.aule_username.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
         w_b_1.addLayout(g)
 
         g = QHBoxLayout()
@@ -446,7 +445,7 @@ class Main(QMainWindow, QWidget):
         self.aule_password = QLineEdit()
         self.aule_password.setEchoMode(QLineEdit.EchoMode.Password)
         self.aule_password.setFixedWidth(200)
-        self.aule_password.setStyleSheet(f'padding: 3px 10px; background: {self.color}; color: {self.base}; border-radius: 12px;')
+        self.aule_password.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
         g.addWidget(self.aule_password)
         w_b_1.addLayout(g)
 
@@ -457,7 +456,7 @@ class Main(QMainWindow, QWidget):
         self.aule_password_2 = QLineEdit()
         self.aule_password_2.setEchoMode(QLineEdit.EchoMode.Password)
         self.aule_password_2.setFixedWidth(200)
-        self.aule_password_2.setStyleSheet(f'padding: 3px 10px; background: {self.color}; color: {self.base}; border-radius: 12px;')
+        self.aule_password_2.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
         g.addWidget(self.aule_password_2)
         g.setContentsMargins(0,0,0,15)
         w_b_1.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
@@ -1035,7 +1034,7 @@ class Main(QMainWindow, QWidget):
 
         elif sender == 'Guardar':
             Excel.write_customers(self)
-            Excel.f5_hub_tagnames(self)
+            # Excel.f5_hub_tagnames(self)
 
         elif sender == 'Buscar':
             con = sqlite3.connect('hub.db')
