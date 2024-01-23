@@ -429,13 +429,25 @@ class Main(QMainWindow, QWidget):
         w_b_1 = QVBoxLayout()
 
         g = QHBoxLayout()
-        l = QLabel('Nombre de usuario')
+        l = QLabel('Usuario de ingreso')
         l.setFixedWidth(150)
         g.addWidget(l)
         self.aule_username = QLineEdit()
-        self.aule_username.setFixedWidth(200)
+        self.aule_username.setFixedWidth(300)
+        self.aule_username.setPlaceholderText('Formato: g.solano')
         g.addWidget(self.aule_username)
-        self.aule_username.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        self.aule_username.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        w_b_1.addLayout(g)
+
+        g = QHBoxLayout()
+        l = QLabel('Nombre de usuario')
+        l.setFixedWidth(150)
+        g.addWidget(l)
+        self.aule_fname = QLineEdit()
+        self.aule_fname.setFixedWidth(300)
+        self.aule_fname.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        self.aule_fname.setPlaceholderText('Formato: Nombre Apellido')
+        g.addWidget(self.aule_fname)
         w_b_1.addLayout(g)
 
         g = QHBoxLayout()
@@ -444,8 +456,9 @@ class Main(QMainWindow, QWidget):
         g.addWidget(l)
         self.aule_password = QLineEdit()
         self.aule_password.setEchoMode(QLineEdit.EchoMode.Password)
-        self.aule_password.setFixedWidth(200)
-        self.aule_password.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        self.aule_password.setFixedWidth(300)
+        self.aule_password.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        self.aule_password.setPlaceholderText('6-30 caracteres')
         g.addWidget(self.aule_password)
         w_b_1.addLayout(g)
 
@@ -455,8 +468,8 @@ class Main(QMainWindow, QWidget):
         g.addWidget(l)
         self.aule_password_2 = QLineEdit()
         self.aule_password_2.setEchoMode(QLineEdit.EchoMode.Password)
-        self.aule_password_2.setFixedWidth(200)
-        self.aule_password_2.setStyleSheet(f'padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
+        self.aule_password_2.setFixedWidth(300)
+        self.aule_password_2.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #020; border-radius: 12px;')
         g.addWidget(self.aule_password_2)
         g.setContentsMargins(0,0,0,15)
         w_b_1.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
@@ -585,7 +598,9 @@ class Main(QMainWindow, QWidget):
         scroll.setWidgetResizable(True)
         l7.addWidget(scroll)
 
-        for i in range(0,201):
+        self.objects_record = []
+
+        for i in range(0,1):
             wr = QHBoxLayout()
             object = QLabel(f'{i}')
             wr.addWidget(object)
@@ -599,8 +614,6 @@ class Main(QMainWindow, QWidget):
             object.addItem('Operativo #1')
             object.addItem('Operativo #2')
             object.addItem('Operativo #3')
-            object.addItem('Operativo #4')
-            object.addItem('Operativo #5')
             object.setObjectName('qcombobox-operativ')
             wr.addWidget(object)
             vbox.addLayout(wr)
@@ -610,7 +623,10 @@ class Main(QMainWindow, QWidget):
         swidget.setMinimumWidth(widthwindow)
 
         scroll.setWidget(swidget)
-        scroll.setMaximumHeight(350)
+        scroll.setMinimumHeight(300)
+        scroll.setMaximumHeight(400)
+
+        vbox.addStretch()
 
         self.assignments_crud_saveit = QPushButton('Guardar')
         self.assignments_crud_saveit.setMaximumWidth(250)
@@ -815,8 +831,9 @@ class Main(QMainWindow, QWidget):
         try:
             cur.execute('''
                 CREATE TABLE user_settings(
-                    USER_LOGGED VARCHAR(99) UNIQUE,
-                    USER_PASSWORD VARCHAR(99),
+                    USER_LOGGED VARCHAR(30) UNIQUE,
+                    FULL_NAME VARCHAR(50),
+                    USER_PASSWORD VARCHAR(30),
                     MAKE_ASSIGNMENTS BOOLEAN,
                     DOWNLOAD_REPORTS BOOLEAN,
                     LOAD_BOOK BOOLEAN,
@@ -824,9 +841,9 @@ class Main(QMainWindow, QWidget):
                     LOAD_ENTRY BOOLEAN,
                     EDIT_UPD_USERS BOOLEAN)
                 ''')
-            record = f'INSERT INTO user_settings VALUES ("system.gabriel.solano", "root", 1, 1, 1, 1, 1, 1)'
+            record = f'INSERT INTO user_settings VALUES ("system.gabriel.solano", "Gabriel Solano", "root", 1, 1, 1, 1, 1, 1)'
             cur.execute(record)
-            record = f'INSERT INTO user_settings VALUES ("paola.castro", "p.Castro", 1, 1, 1, 1, 1, 1)'
+            record = f'INSERT INTO user_settings VALUES ("paola.castro", "Paola Castro", "p.Castro", 1, 1, 1, 1, 1, 1)'
             cur.execute(record)
         # except Exception as e: print(e)
         except: pass
@@ -899,7 +916,7 @@ class Main(QMainWindow, QWidget):
                 res = req.fetchall()
 
                 for r in res:
-                    if typed_data_user == r[0] and typed_data_pass == r[1]:
+                    if typed_data_user == r[0] and typed_data_pass == r[2]:
                         self.user_logged = list(r)
                         self.global_username = r[0]
                         self.success_log = True
@@ -1012,24 +1029,25 @@ class Main(QMainWindow, QWidget):
                 break
 
         if len(self.queued_user) > 0:
-            if self.queued_user[2] == 1: self.au_cb_1.setChecked(True)        # DISPLAYED_NAME: Asignar solicitudes a otros usuarios
+            if self.queued_user[3] == 1: self.au_cb_1.setChecked(True)        # DISPLAYED_NAME: Asignar solicitudes a otros usuarios
             else: self.au_cb_1.setChecked(False)
-            if self.queued_user[3] == 1: self.au_cb_2.setChecked(True)        # DISPLAYED_NAME: Cargar datos nuevos
+            if self.queued_user[4] == 1: self.au_cb_2.setChecked(True)        # DISPLAYED_NAME: Cargar datos nuevos
             else: self.au_cb_2.setChecked(False)
-            if self.queued_user[4] == 1: self.au_cb_3.setChecked(True)        # DISPLAYED_NAME: Generar/descargar reportes
+            if self.queued_user[5] == 1: self.au_cb_3.setChecked(True)        # DISPLAYED_NAME: Generar/descargar reportes
             else: self.au_cb_3.setChecked(False)
-            if self.queued_user[5] == 1: self.au_cb_4.setChecked(True)        # DISPLAYED_NAME: Crear registros manualmente
+            if self.queued_user[6] == 1: self.au_cb_4.setChecked(True)        # DISPLAYED_NAME: Crear registros manualmente
             else: self.au_cb_4.setChecked(False)
-            if self.queued_user[6] == 1: self.au_cb_5.setChecked(True)        # DISPLAYED_NAME: Editar todos los campos
+            if self.queued_user[7] == 1: self.au_cb_5.setChecked(True)        # DISPLAYED_NAME: Editar todos los campos
             else: self.au_cb_5.setChecked(False)
-            if self.queued_user[7] == 1: self.au_cb_6.setChecked(True)        # DISPLAYED_NAME: Administrar otros usuarios
+            if self.queued_user[8] == 1: self.au_cb_6.setChecked(True)        # DISPLAYED_NAME: Administrar otros usuarios
             else: self.au_cb_6.setChecked(False)
 
             self.aule_username.setText(self.queued_user[0])
-            self.aule_password.setText(self.queued_user[1])
-            self.aule_password_2.setText(self.queued_user[1])
+            self.aule_fname.setText(self.queued_user[1])
+            self.aule_password.setText(self.queued_user[2])
+            self.aule_password_2.setText(self.queued_user[2])
 
-            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to uptdate',3000)
+            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to update',3000)
 
         else:
             self.au_searchx.showPopup()
@@ -1064,7 +1082,7 @@ class Main(QMainWindow, QWidget):
             if aule_password != aule_password_2: self.is_valid_data[1] = 1
             else: self.is_valid_data[1] = 0
 
-            # If password have not minimum lenght:
+            # If password have not minimum length:
             if len(aule_password) < 6 or len(aule_password_2) < 6: self.is_valid_data[2] = 1
             else: self.is_valid_data[2] = 0
 
@@ -1093,7 +1111,7 @@ class Main(QMainWindow, QWidget):
 
         if self.is_valid_data[0] == 0 and self.is_valid_data[1] == 0 and self.is_valid_data[2] == 0:
             if res == None:
-                record = f'INSERT INTO user_settings VALUES ("{self.aule_username.text().lower()}", "{self.aule_password.text()}", {self.au_cb_1.isChecked()}, {self.au_cb_2.isChecked()}, {self.au_cb_3.isChecked()}, {self.au_cb_4.isChecked()}, {self.au_cb_5.isChecked()}, {self.au_cb_6.isChecked()})'
+                record = f'INSERT INTO user_settings VALUES ("{self.aule_username.text().lower()}", "{self.aule_fname.text().title()}", "{self.aule_password.text()}", {self.au_cb_1.isChecked()}, {self.au_cb_2.isChecked()}, {self.au_cb_3.isChecked()}, {self.au_cb_4.isChecked()}, {self.au_cb_5.isChecked()}, {self.au_cb_6.isChecked()})'
                 cur.execute(record)
 
                 self.au_searchx.clear()
@@ -1106,7 +1124,7 @@ class Main(QMainWindow, QWidget):
                 self.statusbar.showMessage(f'The user «{self.aule_username.text().lower()}» was created sucessfully!',5000)
 
             else:
-                write = f'UPDATE user_settings SET user_logged = "{self.aule_username.text().lower()}", user_password = "{self.aule_password.text()}", make_assignments = {self.au_cb_1.isChecked()}, load_book = {self.au_cb_2.isChecked()}, download_reports = {self.au_cb_3.isChecked()}, load_entry = {self.au_cb_4.isChecked()}, edit_upd_users = {self.au_cb_5.isChecked()}, admin_users = {self.au_cb_6.isChecked()} WHERE user_logged = ?'
+                write = f'UPDATE user_settings SET user_logged = "{self.aule_username.text().lower()}", full_name = "{self.aule_fname.text().title()}", user_password = "{self.aule_password.text()}", make_assignments = {self.au_cb_1.isChecked()}, load_book = {self.au_cb_2.isChecked()}, download_reports = {self.au_cb_3.isChecked()}, load_entry = {self.au_cb_4.isChecked()}, edit_upd_users = {self.au_cb_5.isChecked()}, admin_users = {self.au_cb_6.isChecked()} WHERE user_logged = ?'
                 cur.execute(write, (query,))
 
         con.commit()
