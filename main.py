@@ -533,10 +533,98 @@ class Main(QMainWindow, QWidget):
         lgg7.addWidget(self.l7_banner2)
         l7.addLayout(lgg7)
 
-        l7.addWidget(QLabel('Asignar las solicitudes nuevas'))
+        h1 = QLabel('Asistente de asignaciones')
+        h2 = QLabel('Control Operativa Cumplimiento')
+
+        stl_h1_h2(self, h1, h2)
+
+        h1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        h2.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        wr = QVBoxLayout()
+        wr.addWidget(h1)
+        wr.addWidget(h2)
+        l7.addLayout(wr)
+
+        vbox = QVBoxLayout()
+        wr = QHBoxLayout()
+
+        self.hd_request_id = QLabel('Solicitud')
+        self.hd_request_id.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.hd_request_id.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
+        wr.addWidget(self.hd_request_id)
+
+        l = QLabel('Identificación')
+        l.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        l.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
+        wr.addWidget(l)
+
+        l = QLabel('Tipo de caso')
+        l.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        l.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
+        wr.addWidget(l)
+
+        l = QLabel('Producto')
+        l.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        l.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
+        wr.addWidget(l)
+
+        l = QLabel('Acción')
+        l.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        l.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
+        wr.addWidget(l)
+
+        vbox.addLayout(wr)
+
+        swidget = QWidget()
+        swidget.setLayout(vbox)
+        swidget.setObjectName('display_left_requests')
+
+        scroll = QScrollArea()
+        # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        scroll.setWidgetResizable(True)
+        l7.addWidget(scroll)
+
+        for i in range(0,201):
+            wr = QHBoxLayout()
+            object = QLabel(f'{i}')
+            wr.addWidget(object)
+            object = QLabel(f'{i}')
+            wr.addWidget(object)
+            object = QLabel('Pruebas')
+            wr.addWidget(object)
+            object = QLabel('N/A')
+            wr.addWidget(object)
+            object = QComboBox()
+            object.addItem('Operativo #1')
+            object.addItem('Operativo #2')
+            object.addItem('Operativo #3')
+            object.addItem('Operativo #4')
+            object.addItem('Operativo #5')
+            object.setObjectName('qcombobox-operativ')
+            wr.addWidget(object)
+            vbox.addLayout(wr)
+
+        widthwindow = (self.width() - 40)
+        swidget.setObjectName('s-widget')
+        swidget.setMinimumWidth(widthwindow)
+
+        scroll.setWidget(swidget)
+        scroll.setMaximumHeight(350)
+
+        self.assignments_crud_saveit = QPushButton('Guardar')
+        self.assignments_crud_saveit.setMaximumWidth(250)
+        self.assignments_crud_saveit.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        wr = QHBoxLayout()
+        wr.addWidget(self.assignments_crud_saveit)
+        l7.addLayout(wr)
 
         l7.addStretch()
         self.w7.setLayout(l7)
+
+        scroll = QScrollArea()
+        scroll.setWidget(self.w7)
 
 # PAGE: DATA LOAD.
         l8 = QVBoxLayout()
@@ -711,10 +799,11 @@ class Main(QMainWindow, QWidget):
 
         self.get_logged.setFocus()
 
+        # Auto-login
         self.le_login_user.setText('paola.castro')
         self.le_login_passw.setText('p.Castro')
         self.get_logged.click()
-        self.menu_tools_dataload.trigger()
+        self.menu_navg_assign.trigger()
 
     def toggle_display_pasw(self):
         if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -1049,11 +1138,17 @@ class Main(QMainWindow, QWidget):
                 tagname_size = len(tagname_size)
                 tagname_size = int(tagname_size + 1)
 
-                dt = res[0]
-                dt = dt.split(' ')
+                dt_date = res[0]
+                dt_date = dt_date.split(' ')
+                dt_date = dt_date[0]
 
-                self.logs_queries_date.setText(dt[0])
-                self.logs_queries_timemark.setText(dt[1])
+                dt_time = res[0]
+                dt_time = dt_time.split(' ')
+                dt_time = dt_time[1:]
+                dt_time = ' '.join(dt_time)
+
+                self.logs_queries_date.setText(dt_date)
+                self.logs_queries_timemark.setText(dt_time)
                 self.logs_queries_tagname.setText(res[1])
                 self.logs_queries_logscount.setText(str(tagname_size))
 

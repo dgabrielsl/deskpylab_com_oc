@@ -83,3 +83,22 @@ QPushButton:focus{
     border: 1px solid #fff;
     border-radius: 12px;
 }
+#display_left_requests{
+    background: #0a0a0a;
+}
+#s-widget{
+    background: #fff;
+}
+#s-widget QLabel{
+    padding: 2px;
+    background: #efe;
+    color: #000;
+    border-left: 1px solid #cdc;
+    border-bottom: 1px solid #cdc;
+}
+#qcombobox-operativ{
+    background: #dfd;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 3px;
+}

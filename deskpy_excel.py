@@ -379,6 +379,9 @@ class Excel():
 
                 strip_insert = insert.replace('\n','').replace('\t','').replace('\r','').replace('\f','').replace('\v','')
                 if strip_insert == '': insert = ''
+                if insert == None or insert == 'None': insert = ''
+
+                # insert = ''
                 # print(f'assigned to→{insert}')
                 line.append(insert)
 
