@@ -1028,30 +1028,61 @@ class Main(QMainWindow, QWidget):
                 self.queued_user = list(r)
                 break
 
-        if len(self.queued_user) > 0:
-            if self.queued_user[3] == 1: self.au_cb_1.setChecked(True)        # DISPLAYED_NAME: Asignar solicitudes a otros usuarios
-            else: self.au_cb_1.setChecked(False)
-            if self.queued_user[4] == 1: self.au_cb_2.setChecked(True)        # DISPLAYED_NAME: Cargar datos nuevos
-            else: self.au_cb_2.setChecked(False)
-            if self.queued_user[5] == 1: self.au_cb_3.setChecked(True)        # DISPLAYED_NAME: Generar/descargar reportes
-            else: self.au_cb_3.setChecked(False)
-            if self.queued_user[6] == 1: self.au_cb_4.setChecked(True)        # DISPLAYED_NAME: Crear registros manualmente
-            else: self.au_cb_4.setChecked(False)
-            if self.queued_user[7] == 1: self.au_cb_5.setChecked(True)        # DISPLAYED_NAME: Editar todos los campos
-            else: self.au_cb_5.setChecked(False)
-            if self.queued_user[8] == 1: self.au_cb_6.setChecked(True)        # DISPLAYED_NAME: Administrar otros usuarios
-            else: self.au_cb_6.setChecked(False)
+        if query != 'system.gabriel.solano':
+            if len(self.queued_user) > 0:
+                self.aule_username.setDisabled(False)
+                self.aule_fname.setDisabled(False)
+                self.aule_password.setDisabled(False)
+                self.aule_password_2.setDisabled(False)
 
+                if self.queued_user[3] == 1: self.au_cb_1.setChecked(True)        # DISPLAYED_NAME: Asignar solicitudes a otros usuarios
+                else: self.au_cb_1.setChecked(False)
+                if self.queued_user[4] == 1: self.au_cb_2.setChecked(True)        # DISPLAYED_NAME: Cargar datos nuevos
+                else: self.au_cb_2.setChecked(False)
+                if self.queued_user[5] == 1: self.au_cb_3.setChecked(True)        # DISPLAYED_NAME: Generar/descargar reportes
+                else: self.au_cb_3.setChecked(False)
+                if self.queued_user[6] == 1: self.au_cb_4.setChecked(True)        # DISPLAYED_NAME: Crear registros manualmente
+                else: self.au_cb_4.setChecked(False)
+                if self.queued_user[7] == 1: self.au_cb_5.setChecked(True)        # DISPLAYED_NAME: Editar todos los campos
+                else: self.au_cb_5.setChecked(False)
+                if self.queued_user[8] == 1: self.au_cb_6.setChecked(True)        # DISPLAYED_NAME: Administrar otros usuarios
+                else: self.au_cb_6.setChecked(False)
+
+                self.aule_username.setText(self.queued_user[0])
+                self.aule_fname.setText(self.queued_user[1])
+                self.aule_password.setText(self.queued_user[2])
+                self.aule_password_2.setText(self.queued_user[2])
+
+                self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to update',3000)
+
+            else:
+                self.au_searchx.showPopup()
+                self.statusbar.showMessage('You must have to select an user up to consult',3000)
+        
+        else:
             self.aule_username.setText(self.queued_user[0])
             self.aule_fname.setText(self.queued_user[1])
             self.aule_password.setText(self.queued_user[2])
             self.aule_password_2.setText(self.queued_user[2])
 
-            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to update',3000)
+            self.aule_username.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
+            self.aule_fname.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
+            self.aule_password.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
+            self.aule_password_2.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
 
-        else:
-            self.au_searchx.showPopup()
-            self.statusbar.showMessage('You must have to select an user up to consult',3000)
+            self.aule_username.setDisabled(True)
+            self.aule_fname.setDisabled(True)
+            self.aule_password.setDisabled(True)
+            self.aule_password_2.setDisabled(True)
+
+            self.au_cb_1.setDisabled(True)
+            self.au_cb_2.setDisabled(True)
+            self.au_cb_3.setDisabled(True)
+            self.au_cb_4.setDisabled(True)
+            self.au_cb_5.setDisabled(True)
+            self.au_cb_6.setDisabled(True)
+
+            self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to update',3000)
 
         con.close()
 
@@ -1069,6 +1100,7 @@ class Main(QMainWindow, QWidget):
             self.is_valid_data = [0, 0, 0]
 
             aule_username = self.aule_username.text()
+            # aule_fname = self.aule_fname.text()
             aule_password = self.aule_password.text()
             aule_password_2 = self.aule_password_2.text()
 
