@@ -24,8 +24,8 @@ class Main(QMainWindow, QWidget):
         self.setWindowTitle('DeskPy - Control Operativa Cumplimiento')
         self.setMinimumWidth(1080)
         self.setMinimumHeight(550)
-        # self.showMaximized()
-        self.setWindowFlags(Qt.WindowType.WindowMaximizeButtonHint | Qt.WindowType.WindowMinimizeButtonHint)
+        self.showMaximized()
+        # self.setWindowFlags(Qt.WindowType.WindowMaximizeButtonHint | Qt.WindowType.WindowMinimizeButtonHint)
 
         # Main menu.
         menu_bar = self.menuBar()
@@ -559,7 +559,45 @@ class Main(QMainWindow, QWidget):
         wr.addWidget(h2)
         l7.addLayout(wr)
 
-        vbox = QVBoxLayout()
+        hbox = QHBoxLayout()
+        l = QLabel('Búsqueda específica:')
+        l.setStyleSheet('color: #0f0;')
+
+        self.rb_by_hd = QRadioButton('Solicitud (HD)')
+        self.rb_by_id = QRadioButton('Identificación')
+
+        self.rb_by_hd.setChecked(True)
+
+        self.rb_by_id_txt = QLineEdit()
+        self.rb_by_id_txt.setObjectName('rb_by_id_txt')
+        self.rb_by_id_txt.setPlaceholderText('1 2345 6789')
+        self.rb_by_id_txt.setFixedWidth(200)
+
+        self.rb_launch_search = QPushButton('Buscar')
+        self.rb_launch_search.setMinimumWidth(200)
+        self.rb_launch_search.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        self.rb_launch_search_clear = QPushButton('Limpiar')
+        self.rb_launch_search_clear.setMinimumWidth(200)
+        self.rb_launch_search_clear.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        hbox.addWidget(l)
+        hbox.addWidget(self.rb_by_hd)
+        hbox.addWidget(self.rb_by_id)
+        hbox.addWidget(self.rb_by_id_txt)
+        hbox.addWidget(self.rb_launch_search)
+        hbox.addWidget(self.rb_launch_search_clear)
+        hbox.addStretch()
+
+        l7.addLayout(hbox)
+
+        self.l7_advanced_filters = QHBoxLayout()
+        l7.addLayout(self.l7_advanced_filters)
+        # Field enabled to add the disposable widget.
+        # ... <- fn setup_filters
+        Excel.setup_filters(self)
+
+        self.vbox = QVBoxLayout()
         wr = QHBoxLayout()
 
         self.hd_request_id = QLabel('Solicitud')
@@ -587,10 +625,10 @@ class Main(QMainWindow, QWidget):
         l.setStyleSheet('margin-top: 10px; padding: 5px; background: #eee; color: #080; border-bottom: 1px solid #080;')
         wr.addWidget(l)
 
-        vbox.addLayout(wr)
+        self.vbox.addLayout(wr)
 
         swidget = QWidget()
-        swidget.setLayout(vbox)
+        swidget.setLayout(self.vbox)
         swidget.setObjectName('display_left_requests')
 
         scroll = QScrollArea()
@@ -598,35 +636,38 @@ class Main(QMainWindow, QWidget):
         scroll.setWidgetResizable(True)
         l7.addWidget(scroll)
 
-        self.objects_record = []
+        # self.objects_record = []
+        # self.disposable_layout = QVBoxLayout()
 
-        for i in range(0,1):
-            wr = QHBoxLayout()
-            object = QLabel(f'{i}')
-            wr.addWidget(object)
-            object = QLabel(f'{i}')
-            wr.addWidget(object)
-            object = QLabel('Pruebas')
-            wr.addWidget(object)
-            object = QLabel('N/A')
-            wr.addWidget(object)
-            object = QComboBox()
-            object.addItem('Operativo #1')
-            object.addItem('Operativo #2')
-            object.addItem('Operativo #3')
-            object.setObjectName('qcombobox-operativ')
-            wr.addWidget(object)
-            vbox.addLayout(wr)
+        # for i in range(0,50):
+        #     n = i + 1
+        #     wr = QHBoxLayout()
+        #     object = QLabel(f'{n}')
+        #     wr.addWidget(object)
+        #     object = QLabel(f'{n}')
+        #     wr.addWidget(object)
+        #     object = QLabel('Pruebas')
+        #     wr.addWidget(object)
+        #     object = QLabel('N/A')
+        #     wr.addWidget(object)
+        #     object = QComboBox()
+        #     object.addItem('Operativo #1')
+        #     object.addItem('Operativo #2')
+        #     object.addItem('Operativo #3')
+        #     object.setObjectName('qcombobox-operativ')
+        #     wr.addWidget(object)
+        #     self.disposable_layout.addLayout(wr)
 
+        # self.vbox.addLayout(self.disposable_layout)
+
+        self.vbox.addStretch()
         widthwindow = (self.width() - 40)
         swidget.setObjectName('s-widget')
         swidget.setMinimumWidth(widthwindow)
 
         scroll.setWidget(swidget)
-        scroll.setMinimumHeight(300)
-        scroll.setMaximumHeight(400)
-
-        vbox.addStretch()
+        scroll.setMinimumHeight(200)
+        scroll.setMaximumHeight(200)
 
         self.assignments_crud_saveit = QPushButton('Guardar')
         self.assignments_crud_saveit.setMaximumWidth(250)
@@ -929,10 +970,10 @@ class Main(QMainWindow, QWidget):
                     self.menu_navg_processing.setDisabled(False)
                     self.menu_settings_account.setDisabled(False)
 
-                    if self.user_logged[2] == 1: self.menu_navg_assign.setDisabled(False)
-                    if self.user_logged[3] == 1: self.menu_tools_reports.setDisabled(False)
-                    if self.user_logged[4] == 1: self.menu_tools_dataload.setDisabled(False)
-                    if self.user_logged[5] == 1: self.menu_settings_users.setDisabled(False)
+                    if self.user_logged[3] == 1: self.menu_navg_assign.setDisabled(False)
+                    if self.user_logged[4] == 1: self.menu_tools_reports.setDisabled(False)
+                    if self.user_logged[5] == 1: self.menu_tools_dataload.setDisabled(False)
+                    if self.user_logged[6] == 1: self.menu_settings_users.setDisabled(False)
 
                     self.le_login_user.setText('')
                     self.le_login_passw.setText('')
@@ -1048,27 +1089,39 @@ class Main(QMainWindow, QWidget):
                 if self.queued_user[8] == 1: self.au_cb_6.setChecked(True)        # DISPLAYED_NAME: Administrar otros usuarios
                 else: self.au_cb_6.setChecked(False)
 
+                self.aule_username.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #000; border-radius: 12px;')
+                self.aule_fname.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #000; border-radius: 12px;')
+                self.aule_password.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #000; border-radius: 12px;')
+                self.aule_password_2.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #000; border-radius: 12px;')
+
                 self.aule_username.setText(self.queued_user[0])
                 self.aule_fname.setText(self.queued_user[1])
                 self.aule_password.setText(self.queued_user[2])
                 self.aule_password_2.setText(self.queued_user[2])
+
+                self.au_cb_1.setDisabled(False)
+                self.au_cb_2.setDisabled(False)
+                self.au_cb_3.setDisabled(False)
+                self.au_cb_4.setDisabled(False)
+                self.au_cb_5.setDisabled(False)
+                self.au_cb_6.setDisabled(False)
 
                 self.statusbar.showMessage(f'User «{self.queued_user[0]}» succesfully queued, ready to update',3000)
 
             else:
                 self.au_searchx.showPopup()
                 self.statusbar.showMessage('You must have to select an user up to consult',3000)
-        
+
         else:
             self.aule_username.setText(self.queued_user[0])
             self.aule_fname.setText(self.queued_user[1])
             self.aule_password.setText(self.queued_user[2])
             self.aule_password_2.setText(self.queued_user[2])
 
-            self.aule_username.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
-            self.aule_fname.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
-            self.aule_password.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
-            self.aule_password_2.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #a00; border-radius: 12px;')
+            self.aule_username.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #999; border-radius: 12px;')
+            self.aule_fname.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #999; border-radius: 12px;')
+            self.aule_password.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #999; border-radius: 12px;')
+            self.aule_password_2.setStyleSheet(f'margin-right: 40px; padding: 3px 10px; background: #fff; color: #999; border-radius: 12px;')
 
             self.aule_username.setDisabled(True)
             self.aule_fname.setDisabled(True)

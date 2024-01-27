@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import *
 
 import openpyxl
 from openpyxl import Workbook
@@ -10,7 +10,10 @@ from openpyxl.styles import Border, Side, PatternFill, Alignment, Font
 import re
 from datetime import datetime
 
-class Excel():
+class Excel(QWidget):
+    def __init__(self):
+        super().__init__()
+
     def load_sysde(self):
         con = sqlite3.connect('sysde.db')
         cur = con.cursor()
@@ -587,5 +590,37 @@ class Excel():
 
         # except Exception as e: print(e)
         except: pass
+
+        con.close()
+    
+    def setup_filters(self):
+        try: self.dispossable_widget_filters.deleteLater()
+        except: pass
+
+        self.dispossable_widget_filters = QWidget()
+        self.dispossable_widget_filters.setObjectName('dispossable_widget_filters')
+        flyt = QHBoxLayout()
+        self.dispossable_widget_filters.setLayout(flyt)
+
+        self.l7_advanced_filters.addWidget(QLabel('Filtros:'))
+
+        con = sqlite3.connect('hub.db')
+        cur = con.cursor()
+
+        req = cur.execute('SELECT * FROM customers')
+        res = req.fetchall()
+
+        self.assigned_requests = {}
+        self.assigned_requests = set(self.assigned_requests)
+
+        for r in res:
+            try: self.assigned_requests.add(r[17])
+            except: pass
+
+        for ar in self.assigned_requests:
+            print(f'... {ar}')
+
+        self.l7_advanced_filters.addWidget(self.dispossable_widget_filters)
+        self.l7_advanced_filters.addStretch()
 
         con.close()
