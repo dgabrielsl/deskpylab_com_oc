@@ -666,8 +666,7 @@ class Main(QMainWindow, QWidget):
         swidget.setMinimumWidth(widthwindow)
 
         scroll.setWidget(swidget)
-        scroll.setMinimumHeight(200)
-        scroll.setMaximumHeight(200)
+        scroll.setFixedHeight(300)
 
         self.assignments_crud_saveit = QPushButton('Guardar')
         self.assignments_crud_saveit.setMaximumWidth(250)
@@ -860,7 +859,7 @@ class Main(QMainWindow, QWidget):
         self.le_login_user.setText('paola.castro')
         self.le_login_passw.setText('p.Castro')
         self.get_logged.click()
-        self.menu_navg_assign.trigger()
+        # self.menu_navg_assign.trigger()
 
     def toggle_display_pasw(self):
         if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)
@@ -931,7 +930,8 @@ class Main(QMainWindow, QWidget):
                     RESULT VARCHAR(100),
                     UPDATED VARCHAR(20),
                     FNAME VARCHAR(150),
-                    CHANGES_LOG VARCHAR(5000))
+                    CHANGES_LOG VARCHAR(5000),
+                    FLAG BOOLEAN)
                 ''')
         except Exception as e: pass
 

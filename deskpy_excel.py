@@ -2,6 +2,7 @@ import os
 import sqlite3
 
 from PyQt6.QtWidgets import *
+from PyQt6.QtCore import Qt
 
 import openpyxl
 from openpyxl import Workbook
@@ -520,7 +521,7 @@ class Excel(QWidget):
                                 try:
                                     dt = datetime.now()
                                     dt = dt = f'{dt.day}/{dt.month}/{dt.year} {dt.hour}H {dt.minute}M {dt.second}S'
-                                    record = f'INSERT INTO customers VALUES ("{dt}", "{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "")'
+                                    record = f'INSERT INTO customers VALUES ("{dt}", "{query}", "{c[0]}", "{c[1]}", "{c[2]}", "{c[3]}", "{c[4]}", "{c[5]}", "{c[6]}", "{c[7]}", "{c[8]}", "{c[9]}", "{c[10]}", "{c[11]}", "{c[12]}", "{c[13]}", "{c[14]}", "{c[15]}", "{c[16]}", "{c[17]}", "{c[18]}", "", "True")'
                                     cur.execute(record)
                                 except Exception as e: print(e)
 
@@ -594,7 +595,14 @@ class Excel(QWidget):
         con.close()
     
     def setup_filters(self):
-        try: self.dispossable_widget_filters.deleteLater()
+        try:
+            self.fltr_class_case = {}
+            self.fltr_class_case = set(self.fltr_class_case)
+            self.fltr_assignet_to = {}
+            self.fltr_assignet_to = set(self.fltr_assignet_to)
+            self.fltr_product = {}
+            self.fltr_product = set(self.fltr_product)
+            self.dispossable_widget_filters.deleteLater()
         except: pass
 
         self.dispossable_widget_filters = QWidget()
@@ -610,15 +618,94 @@ class Excel(QWidget):
         req = cur.execute('SELECT * FROM customers')
         res = req.fetchall()
 
-        self.assigned_requests = {}
-        self.assigned_requests = set(self.assigned_requests)
+        self.fltr_class_case = {}
+        self.fltr_class_case = set(self.fltr_class_case)
+
+        self.fltr_assignet_to = {}
+        self.fltr_assignet_to = set(self.fltr_assignet_to)
+
+        self.fltr_product = {}
+        self.fltr_product = set(self.fltr_product)
 
         for r in res:
-            try: self.assigned_requests.add(r[17])
+            try:
+                self.fltr_class_case.add(r[6])
+                self.fltr_product.add(r[8])
+                self.fltr_assignet_to.add(r[17])
             except: pass
 
-        for ar in self.assigned_requests:
-            print(f'... {ar}')
+
+        # "Class case" filters.
+        hbl = QVBoxLayout()
+        for i in self.fltr_class_case:
+
+            if i.strip() != '': caption = i
+            else: caption = 'En blanco'
+
+            object = QCheckBox(caption)
+            object.setChecked(True)
+            object.clicked.connect(lambda:print(self.sender().text()))
+
+            hbl.addWidget(object)
+
+        scroll = QScrollArea()
+        scroll.setStyleSheet('border: none;')
+        # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        w = QWidget()
+        w.setLayout(hbl)
+        scroll.setWidget(w)
+        scroll.setMaximumHeight(150)
+        self.l7_advanced_filters.addWidget(scroll)
+
+        # "Product" filters.
+        hbl = QVBoxLayout()
+        for i in self.fltr_product:
+
+            if i.strip() != '': caption = i
+            else: caption = 'En blanco'
+
+            object = QCheckBox(caption)
+            object.setChecked(True)
+            object.clicked.connect(lambda:print(self.sender().text()))
+
+            hbl.addWidget(object)
+
+        scroll = QScrollArea()
+        scroll.setStyleSheet('border: none;')
+        # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        w = QWidget()
+        w.setLayout(hbl)
+        scroll.setWidget(w)
+        scroll.setMaximumHeight(150)
+        self.l7_advanced_filters.addWidget(scroll)
+
+        # "Assigned to" filters.
+        hbl = QVBoxLayout()
+        for i in self.fltr_assignet_to:
+
+            if i.strip() != '': caption = i
+            else: caption = 'En blanco'
+
+            object = QCheckBox(caption)
+            object.setChecked(True)
+            object.clicked.connect(lambda:print(self.sender().text()))
+
+            hbl.addWidget(object)
+
+        scroll = QScrollArea()
+        scroll.setStyleSheet('border: none;')
+        # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        w = QWidget()
+        w.setLayout(hbl)
+        scroll.setWidget(w)
+        scroll.setMaximumHeight(150)
+        self.l7_advanced_filters.addWidget(scroll)
+
+
+
+
+
+
 
         self.l7_advanced_filters.addWidget(self.dispossable_widget_filters)
         self.l7_advanced_filters.addStretch()
