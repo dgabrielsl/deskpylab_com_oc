@@ -596,6 +596,7 @@ class Excel(QWidget):
     
     def setup_filters(self):
         try:
+            self.flagged_items = []
             self.fltr_class_case = {}
             self.fltr_class_case = set(self.fltr_class_case)
             self.fltr_assignet_to = {}
@@ -630,12 +631,15 @@ class Excel(QWidget):
         self.fltr_product = set(self.fltr_product)
 
         for r in res:
-            try:
-                self.fltr_class_case.add(r[6])
-                self.fltr_product.add(r[8])
-                self.fltr_assignet_to.add(r[17])
-            except: pass
+            if r[-1] == True or r[-1] == 'True': self.flagged_items.append(r)
 
+        for fi in self.flagged_items:
+            try: self.fltr_class_case.add(fi[6])
+            except: pass
+            try: self.fltr_product.add(fi[8])
+            except: pass
+            try: self.fltr_assignet_to.add(fi[17])
+            except: pass
 
         # "Class case" filters.
         hbl = QVBoxLayout()
@@ -678,6 +682,7 @@ class Excel(QWidget):
 
             hbl.addWidget(object)
 
+        hbl.addStretch()
         scroll = QScrollArea()
         scroll.setStyleSheet('border: none;')
         # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)

@@ -599,11 +599,12 @@ class Main(QMainWindow, QWidget):
         self.apply_filters = QPushButton('Aplicar')
         self.apply_filters.clicked.connect(lambda:self.sender().text())
         self.apply_filters.setMinimumWidth(200)
+        self.apply_filters.setCursor(Qt.CursorShape.PointingHandCursor)
 
         hbox = QHBoxLayout()
         hbox.addWidget(self.apply_filters)
 
-        hbox.addStretch()
+        hbox.addStretch(0)
         self.l7_advanced_filters.addLayout(hbox)
 
         self.vbox = QVBoxLayout()
