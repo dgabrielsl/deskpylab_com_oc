@@ -593,9 +593,18 @@ class Main(QMainWindow, QWidget):
 
         self.l7_advanced_filters = QHBoxLayout()
         l7.addLayout(self.l7_advanced_filters)
-        # Field enabled to add the disposable widget.
-        # ... <- fn setup_filters
+
         Excel.setup_filters(self)
+
+        self.apply_filters = QPushButton('Aplicar')
+        self.apply_filters.clicked.connect(lambda:self.sender().text())
+        self.apply_filters.setMinimumWidth(200)
+
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.apply_filters)
+
+        hbox.addStretch()
+        self.l7_advanced_filters.addLayout(hbox)
 
         self.vbox = QVBoxLayout()
         wr = QHBoxLayout()
@@ -859,7 +868,7 @@ class Main(QMainWindow, QWidget):
         self.le_login_user.setText('paola.castro')
         self.le_login_passw.setText('p.Castro')
         self.get_logged.click()
-        # self.menu_navg_assign.trigger()
+        self.menu_navg_assign.trigger()
 
     def toggle_display_pasw(self):
         if self.display_passw.isChecked(): self.le_login_passw.setEchoMode(QLineEdit.EchoMode.Normal)

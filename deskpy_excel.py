@@ -610,7 +610,9 @@ class Excel(QWidget):
         flyt = QHBoxLayout()
         self.dispossable_widget_filters.setLayout(flyt)
 
-        self.l7_advanced_filters.addWidget(QLabel('Filtros:'))
+        l = QLabel('Filtros:')
+        l.setStyleSheet('padding: 10px; color: #0f0; font-size: 17px;')
+        self.l7_advanced_filters.addWidget(l)
 
         con = sqlite3.connect('hub.db')
         cur = con.cursor()
@@ -637,6 +639,9 @@ class Excel(QWidget):
 
         # "Class case" filters.
         hbl = QVBoxLayout()
+        l = QLabel('Tipo de caso:')
+        l.setStyleSheet('color: #0f0; font-size: 17px;')
+        hbl.addWidget(l)
         for i in self.fltr_class_case:
 
             if i.strip() != '': caption = i
@@ -659,6 +664,9 @@ class Excel(QWidget):
 
         # "Product" filters.
         hbl = QVBoxLayout()
+        l = QLabel('Producto:')
+        l.setStyleSheet('color: #0f0; font-size: 17px;')
+        hbl.addWidget(l)
         for i in self.fltr_product:
 
             if i.strip() != '': caption = i
@@ -681,6 +689,9 @@ class Excel(QWidget):
 
         # "Assigned to" filters.
         hbl = QVBoxLayout()
+        l = QLabel('Asignado a:')
+        l.setStyleSheet('color: #0f0; font-size: 17px;')
+        hbl.addWidget(l)
         for i in self.fltr_assignet_to:
 
             if i.strip() != '': caption = i
