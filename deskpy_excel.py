@@ -658,7 +658,7 @@ class Excel(QWidget):
             hbl.addWidget(object)
 
         scroll = QScrollArea()
-        scroll.setStyleSheet('border: none;')
+        scroll.setStyleSheet('background: #222; border-radius: 9px')
         # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         w = QWidget()
         w.setLayout(hbl)
@@ -684,7 +684,7 @@ class Excel(QWidget):
 
         hbl.addStretch()
         scroll = QScrollArea()
-        scroll.setStyleSheet('border: none;')
+        scroll.setStyleSheet('background: #222; border-radius: 9px')
         # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         w = QWidget()
         w.setLayout(hbl)
@@ -709,19 +709,13 @@ class Excel(QWidget):
             hbl.addWidget(object)
 
         scroll = QScrollArea()
-        scroll.setStyleSheet('border: none;')
+        scroll.setStyleSheet('background: #222; border-radius: 9px')
         # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         w = QWidget()
         w.setLayout(hbl)
         scroll.setWidget(w)
         scroll.setMaximumHeight(150)
         self.l7_advanced_filters.addWidget(scroll)
-
-
-
-
-
-
 
         self.l7_advanced_filters.addWidget(self.dispossable_widget_filters)
         self.l7_advanced_filters.addStretch()
