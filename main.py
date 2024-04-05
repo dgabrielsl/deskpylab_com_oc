@@ -307,6 +307,7 @@ class Main(QMainWindow, QWidget):
         l1.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.w1.setLayout(l1)
 
+
 # PAGE: ASSIGNMENTS BOARD
         l2 = QVBoxLayout()
 
@@ -641,34 +642,13 @@ class Main(QMainWindow, QWidget):
         swidget.setLayout(self.vbox)
         swidget.setObjectName('display_left_requests')
 
+        self.statusbar.addWidget(QLabel('My text'))
+        self.statusbar.showMessage('my text')
+
         scroll = QScrollArea()
         # scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         scroll.setWidgetResizable(True)
         l7.addWidget(scroll)
-
-        # self.objects_record = []
-        # self.disposable_layout = QVBoxLayout()
-
-        # for i in range(0,50):
-        #     n = i + 1
-        #     wr = QHBoxLayout()
-        #     object = QLabel(f'{n}')
-        #     wr.addWidget(object)
-        #     object = QLabel(f'{n}')
-        #     wr.addWidget(object)
-        #     object = QLabel('Pruebas')
-        #     wr.addWidget(object)
-        #     object = QLabel('N/A')
-        #     wr.addWidget(object)
-        #     object = QComboBox()
-        #     object.addItem('Operativo #1')
-        #     object.addItem('Operativo #2')
-        #     object.addItem('Operativo #3')
-        #     object.setObjectName('qcombobox-operativ')
-        #     wr.addWidget(object)
-        #     self.disposable_layout.addLayout(wr)
-
-        # self.vbox.addLayout(self.disposable_layout)
 
         self.vbox.addStretch()
         widthwindow = (self.width() - 40)
@@ -1025,38 +1005,48 @@ class Main(QMainWindow, QWidget):
         elif self.bt_sender == '&Inicio':
             self.stacked_layout.setCurrentIndex(1)
             self.l1_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Inicio')
 
         elif self.bt_sender == '&Bandeja de asignaciones':
             self.stacked_layout.setCurrentIndex(2)
             self.l2_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Bandeja de asignaciones')
 
         elif self.bt_sender == '&Procesamiento de solicitudes':
             self.stacked_layout.setCurrentIndex(3)
             self.l3_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Procesamiento de solicitudes')
 
         elif self.bt_sender == '&Cargar datos':
             self.stacked_layout.setCurrentIndex(8)
             self.l8_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Cargar datos')
 
         elif self.bt_sender == '&Generar reportes':
             self.stacked_layout.setCurrentIndex(4)
             self.l4_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Generar reportes')
 
         elif self.bt_sender == '&Administrar usuarios':
             self.stacked_layout.setCurrentIndex(5)
             self.l5_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Administrar usuarios')
 
         elif self.bt_sender == '&Mi cuenta':
             self.stacked_layout.setCurrentIndex(6)
             self.l6_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Mi cuenta')
 
         elif self.bt_sender == '&Asignar solicitudes':
             self.stacked_layout.setCurrentIndex(7)
             self.l7_banner2.setText(self.global_username)
+            self.statusbar.showMessage('Asignar solicitudes')
 
         elif self.bt_sender == '&Documentación':
+            self.statusbar.showMessage('Documentación')
             pass
         elif self.bt_sender == '&GitHub':
+            self.statusbar.showMessage('GitHub')
             pass
 
     def disable_echomode_for_aule(self):
@@ -1165,7 +1155,7 @@ class Main(QMainWindow, QWidget):
             aule_username = self.aule_username.text()
             # aule_fname = self.aule_fname.text()
             aule_password = self.aule_password.text()
-            aule_password_2 = self.aule_password_2.text()
+            aule_password_2 = self.aule_password_2.text()   
 
         # Username check up.
             # If username have not minimum length:
@@ -1277,6 +1267,7 @@ class Main(QMainWindow, QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(Path('style.qss').read_text())
+    try: app.setStyleSheet(Path('style.qss').read_text())
+    except Exception as e: print(e)
     win = Main()
     sys.exit(app.exec())
