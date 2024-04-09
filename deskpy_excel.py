@@ -101,25 +101,27 @@ class Excel(QWidget):
             ws = wb.worksheets[0]
         except Exception as e: print(e)
 
-        helpdesk = ''
-        identification = ''
-        document = ''
-        code = ''
-        class_case = ''
-        status = ''
-        product = ''
-        income_source = ''
-        warning_amount = ''
-        customer_profile = ''
-        deadline = ''
-        notif_type = ''
-        contact_type = ''
-        customer_answer = ''
-        assigned_to = ''
-        author = ''
-        result = ''
-        updated = ''
-        fname = ''
+        if True:
+            helpdesk = ''
+            status = ''
+            fname = ''
+            author = ''
+            assigned_to = ''
+            updated = ''
+            identification = ''
+            document = ''
+            class_case = ''
+            deadline = ''
+            product = ''
+            result = ''
+            customer_answer = ''
+            code = ''
+            income_source = ''
+            warning_amount = ''
+            customer_profile = ''
+            notif_type = ''
+            contact_type = ''
+        
 
         for i in range(ws.max_column):
             i += 1
