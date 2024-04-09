@@ -1,0 +1,5 @@
+hub.db
+settings.db
+sysde.db
+dict.txt
+__pycache__/
