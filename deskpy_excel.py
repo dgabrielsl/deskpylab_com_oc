@@ -601,7 +601,9 @@ class Excel(QWidget):
             self.flagged_items = []
             self.fltr_class_case = {}
             self.fltr_class_case = set(self.fltr_class_case)
-            self.fltr_assignet_to = {}
+            self.fltr_assignet_
+            
+            to = {}
             self.fltr_assignet_to = set(self.fltr_assignet_to)
             self.fltr_product = {}
             self.fltr_product = set(self.fltr_product)
